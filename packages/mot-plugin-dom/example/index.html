@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="./index.css"> -->
+    <script src="../../mot/dist/index.iife.js"></script>
+    <script src="../dist/index.iife.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        #app {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: relative;
+            transform: rotate(360);
+        }
+
+        #animateIt {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+        }
+    </style>
+    <style>
+        #app {
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+    <button id="animateIt">animate it</button>
+</body>
+<script>
+    let controller = document.getElementById('animateIt');
+    mot.use(DomRender)
+    mot.on('domRenderBeforeRender', () => {
+        console.log('domRenderBeforeRender')
+    })
+    let Animation = mot.create()
+    Animation
+        .step([
+            { action: 'move', x: 100, y: 100 },
+            { action: 'scale', x: 2, y: 2 },
+            { action: 'attribute', key: "borderRadius", value: "50%" },
+        ])
+        .moveTo(200, 200)
+        .scale(1)
+        .attribute('borderRadius','0%')
+        .rotate(90, 200)
+        .rotate(45)
+        .wait(500)
+        .moveTo({ x: 0, y: 0, timeFunction: 'ease-in-out' })
+        .rotate(0)
+    console.log(Animation)
+    let renderer = mot.dom(document.getElementById('app'), Animation)
+    controller.addEventListener('click', () => {
+        renderer.render()
+    })
+</script>
+
+</html>

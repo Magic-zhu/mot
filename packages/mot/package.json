@@ -1,0 +1,36 @@
+{
+  "name": "mot",
+  "version": "0.0.33",
+  "description": "先占个名字坑位",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "rollup --config",
+    "start": "rollup --config -w",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Magic-zhu/mot.js.git"
+  },
+  "keywords": [
+    "animation",
+    "webgl",
+    "canvas",
+    "svg"
+  ],
+  "author": "朱睿家",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Magic-zhu/mot.js/issues"
+  },
+  "homepage": "https://github.com/Magic-zhu/mot.js#readme",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^8.0.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-dts": "^2.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "tslib": "^2.0.3",
+    "typescript": "^4.1.2"
+  },
+  "dependencies": {}
+}

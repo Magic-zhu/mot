@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../dist/index.iife.js"></script>
+</head>
+
+<body>
+    <div id='app'></div>
+</body>
+<script>
+    let motion = new mot()
+    mot.once('connect',(data)=>{
+        console.log(data)
+    })
+
+    mot.emit('connect',1)
+    mot.emit('connect',2)
+    mot.emit('connect',3)
+    mot.emit('connect',4)
+</script>
+
+</html>

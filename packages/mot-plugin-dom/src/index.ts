@@ -1,0 +1,315 @@
+import {
+    Action,
+    StyleObject,
+    AttributeOptions,
+    RotateOptions,
+    ScaleOptions,
+} from "./@types"
+
+class DomRender {
+
+    static pluginName: string = 'DomRender'
+    static installed: boolean = false
+    static mot: any
+
+    target: HTMLElement
+    Animation: any
+    taskQueue: any[]
+    originTransform: any[]
+    originTransitionProperty: string[]
+    timeLine: any[]
+
+    tempQueue: Object[]
+
+    constructor(dom: HTMLElement, Animation: any) {
+        this.target = dom;
+        let position = '';
+        position = window.getComputedStyle(this.target, null).position;
+        this.target.style.position = position == 'relative' ? 'relative' : 'absolute';
+        this.Animation = Animation;
+        this.init();
+    }
+
+    static install(mot: any) {
+        this.mot = mot
+        // register a function on the 'mot'
+        mot.register('dom', (dom: HTMLElement, Animation: any) => {
+            return new DomRender(dom, Animation)
+        })
+    }
+
+    init() {
+        console.log(document.styleSheets)
+        this.originTransform = this.getOriginStyleTransform(this.target);
+        this.originTransitionProperty = [];
+        let animations = this.Animation.actions;
+        this.taskQueue = animations.children || [];
+        this.initStyle(this.taskQueue);
+    }
+
+    update(transform: string | null, transitionProperty: string | null) {
+        if (transform !== null) this.originTransform = this.splitStyleToArray(transform);
+        if (transitionProperty !== null) this.originTransitionProperty = this.spliteTransitionPropertyToArray(transitionProperty);
+    }
+
+    getOriginStyleTransform(element: HTMLElement) {
+        let transform: string = element.style.transform;
+        transform = transform === "" ? window.getComputedStyle(element, null).transform : transform;
+        if (transform === '' || transform === null || transform === 'none') return [];
+        return this.splitStyleToArray(transform)
+    }
+
+    initStyle(taskQueue: Action[]) {
+        let ifInitMove = false;
+        const moveInit = () => {
+            // TODO 用另一个api更好  待尝试
+            this.target.style.left = this.target.style.left || '0px';
+            this.target.style.top = this.target.style.top || '0px';
+        }
+        for (let i = 0, l = taskQueue.length; i < l; i++) {
+            const item = taskQueue[i];
+            if (item.type === 'group') {
+                let ifHasMoveAction = item.children.findIndex((item) => item.action === 'move') !== -1;
+                !ifInitMove && ifHasMoveAction && moveInit()
+                ifInitMove = true
+            } else {
+                if (item.action === 'move') {
+                    !ifInitMove && moveInit()
+                    ifInitMove = true
+                }
+            }
+        }
+    }
+
+    render() {
+        DomRender.mot.emit('domRenderBeforeRender', this);
+        const waitingList: StyleObject[] = this.getStyleFromTaskQueue(this.taskQueue);
+        const len: number = waitingList.length;
+        let index: number = 0;
+        const next = (item: StyleObject, time: number = -1) => {
+            const done = () => {
+                const { style } = item;
+                for (let attr in style) {
+                    this.target.style[attr] = style[attr];
+                }
+                index++;
+                if (index < len) next(waitingList[index], index === 0 ? 0 : waitingList[index - 1].duration);
+            }
+            // 判断是同步还是异步执行 -1 代表同步
+            if (time === -1) {
+                done()
+            } else {
+                setTimeout(() => {
+                    done();
+                }, time)
+            }
+        }
+        setTimeout(() => {
+            next(waitingList[0])
+        }, 0)
+    }
+
+    mergeTransForm(origin: any[], newStyle: string): string {
+        let newStyleArray = this.splitStyleToArray(newStyle);
+        let transformStyle = newStyle;
+        origin.forEach((item: any) => {
+            let ifHasSameTransform = false;
+            for (let i = 0, l = newStyleArray.length; i < l; i++) {
+                if (item[0][0] == newStyleArray[i][0][0]) {
+                    ifHasSameTransform = true
+                    break
+                }
+            }
+            if (!ifHasSameTransform) transformStyle = transformStyle + ` ${item[0]}(${item[1]})`;
+        })
+        return transformStyle
+    }
+
+    mergeTransitionProperty(origin: string[], newProperty: string) {
+        let newPropertyArray: string[] = this.spliteTransitionPropertyToArray(newProperty);
+        let transitionProperty = newProperty;
+        origin.forEach((item: any) => {
+            if (!newPropertyArray.includes(item)) {
+                transitionProperty = transitionProperty + ',' + item;
+            }
+        })
+        return transitionProperty
+    }
+
+    getStyleFromTaskQueue(taskQueue: any[]): StyleObject[] {
+        let styleArray: StyleObject[] = [];
+        taskQueue.forEach(item => {
+            if (item.type == 'group') {
+                item.children.forEach(child => {
+                    child.duration = item.duration;
+                    styleArray.push({ style: this.transferAction(child), duration: -1 })
+                })
+                styleArray.push({ style: {}, duration: item.duration })
+            } else if (item.action == 'wait') {
+                styleArray.push({ style: {}, duration: item.time })
+            } else {
+                styleArray.push({ style: this.transferAction(item), duration: item.duration })
+            }
+        })
+        return styleArray
+    }
+
+    transferAction(item: Action) {
+        const TYPEMAP = {
+            'translate': this.translate,
+            'rotate': this.rotate,
+            'scale': this.scale,
+            'attribute': this.attribute,
+            'move': this.move,
+        }
+        return TYPEMAP[item.action].bind(this)(item);
+    }
+
+    statusOn() {
+
+    }
+
+    statusOff() {
+
+    }
+
+    translate(params: any) {
+        let transform = params.z !== undefined ? `translate3d(${params.x},${params.y})` : `translate(${params.x},${params.y},${params.z})`;
+        const transitionDuration = `${params.duration}ms`;
+        const transitionTimingFunction = `${params.timeFunction}`;
+        let transitionProperty = `transform`;
+        transform = this.mergeTransForm(this.originTransform, transform);
+        transitionProperty = this.mergeTransitionProperty(this.originTransitionProperty, transitionProperty);
+        this.update(transform, transitionProperty);
+        return {
+            transform,
+            transitionDuration,
+            transitionTimingFunction,
+            transitionProperty,
+        }
+    }
+
+    move(params: any) {
+        const left = `${Number(params.x) ? params.x + 'px' : params.x}`;
+        const top = `${Number(params.x) ? params.x + 'px' : params.x}`;
+        const transitionDuration = `${params.duration}ms`;
+        const transitionTimingFunction = `${params.timeFunction}`;
+        let transitionProperty = `left,top`;
+        transitionProperty = this.mergeTransitionProperty(this.originTransitionProperty, transitionProperty);
+        this.update(null, transitionProperty);
+        return {
+            left,
+            top,
+            transitionDuration,
+            transitionTimingFunction,
+            transitionProperty,
+        }
+    }
+
+    scale(params: ScaleOptions) {
+        let transform = params.z !== undefined ? `scale3d(${params.x},${params.y},${params.z})` : `scale(${params.x},${params.y})`;
+        const transitionDuration = `${params.duration}ms`;
+        const transitionTimingFunction = `${params.timeFunction}`;
+        let transitionProperty = `transform`;
+        transform = this.mergeTransForm(this.originTransform, transform);
+        transitionProperty = this.mergeTransitionProperty(this.originTransitionProperty, transitionProperty);
+        this.update(transform, transitionProperty);
+        return {
+            transform,
+            transitionDuration,
+            transitionTimingFunction,
+            transitionProperty,
+        }
+    }
+
+    rotate(params: RotateOptions) {
+        let transform = params.x !== undefined || params.y !== undefined ? `rotate3d(${params.x}deg,${params.y}deg,${params.z}deg)` : `rotate(${params.z}deg)`;
+        const transitionDuration = `${params.duration}ms`;
+        const transitionTimingFunction = `${params.timeFunction}`;
+        let transitionProperty = `transform`;
+        transform = this.mergeTransForm(this.originTransform, transform);
+        transitionProperty = this.mergeTransitionProperty(this.originTransitionProperty, transitionProperty);
+        this.update(transform, transitionProperty);
+        return {
+            transform,
+            transitionDuration,
+            transitionTimingFunction,
+            transitionProperty,
+        }
+    }
+
+    attribute(params: AttributeOptions) {
+        const transitionDuration = `${params.duration}ms`;
+        const transitionTimingFunction = `${params.timeFunction}`;
+        let transitionProperty = `${this.humpParse(params.key)}`;
+        transitionProperty = this.mergeTransitionProperty(this.originTransitionProperty, transitionProperty);
+        this.update(null, transitionProperty)
+        return {
+            [params.key]: params.value,
+            transitionDuration,
+            transitionTimingFunction,
+            transitionProperty,
+        }
+    }
+
+    // aaaBbb=>‘aaa-bbb’
+    humpParse(s) {
+        const reg = /([a-z]+)|([A-Z]{1}[a-z]+)/g;
+        let r = s.match(reg)
+        let attr = ''
+        r.forEach((e, index) => {
+            if (index === 0) {
+                attr = e;
+            } else {
+                e = e.toLowerCase()
+                attr = attr + '-' + e;
+            }
+        })
+        return attr
+    }
+
+    /**
+     * "rotate(10) translate(1,1)" -> [["rotate",10],[translate,"1,1"]] 
+     * @param styleString 
+     * @returns 
+     */
+    splitStyleToArray(styleString: string): any[] {
+        const transformArray = styleString.match(/[a-zA-Z]+\s*?\(.*?\)/gms);
+        return transformArray.map((item: string) => {
+            try {
+                const KEYREG = /([a-zA-Z]*?)\(/;
+                const VALUEREG = /\((.*)\)/;
+                // match the origin attributes
+                return [[item.match(KEYREG)[1]], item.match(VALUEREG)[1]]
+            } catch (error) {
+                throw new Error('There is something wrong with transform style')
+            }
+        })
+    }
+
+    spliteTransitionPropertyToArray(property: string): string[] {
+        let array = property.split(',').filter(item => item !== '' || item !== undefined);
+        return array
+    }
+
+    // addTransitionStyle(dom: HTMLElement, attr: string, time: number, timeFunc: string) {
+    //     let p = dom.style.transitionProperty
+    //     if (!p) {
+    //         p = ""
+    //     } else {
+    //         p = p.charAt(p.length - 1) === ',' ? p : p + ','
+    //     }
+    //     if (p.indexOf('attr') !== -1) {
+    //         return
+    //     }
+    //     dom.style.transitionProperty = p + attr + ','
+    // }
+}
+
+if (window['DomRender']) {
+    console.warn(`'DomRender' had been used,and it will be covered`);
+}
+
+window['DomRender'] = DomRender
+
+export default DomRender
