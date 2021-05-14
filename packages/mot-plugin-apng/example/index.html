@@ -60,6 +60,7 @@
             <button id="btn4">停止</button>
             <button id='btn5'>开始后第10帧停止</button>
             <button id='btn6'>只播放2次</button>
+            <button id='btn7'>清除画布</button>
         </div>
     </div>
 
@@ -87,8 +88,14 @@
                 ctx.fillStyle = 'blue'
                 ctx.fillRect(200, 200, 100 + f * 3, 100 + f * 3)
             })
+            anim.setOptions({ playNum: 1 })
             anim.play()
+            anim.on('stop',()=>{
 
+            })
+            // setTimeout(()=>{
+            //     anim.stop()
+            // },500)
         })
     apng.animateImage(image3, false)
         .then(anim => {
@@ -100,8 +107,12 @@
                 ctx.fillStyle = 'blue'
                 ctx.fillRect(200, 200, 100 + f * 3, 100 + f * 3)
             })
+            anim.setOptions({ playNum: 1 })
             anim.play()
+            
+            anim.on('stop',()=>{
 
+            })
         })
     apng.animateImage(image2, false)
         .then(anim => {
@@ -127,6 +138,9 @@
             document.getElementById('btn6').addEventListener('click', () => {
                 anim.setOptions({ playNum: 2 })
                 anim.play()
+            })
+            document.getElementById('btn7').addEventListener('click', () => {
+                anim.clear()
             })
         })
         .catch(err => {

@@ -15,6 +15,7 @@ class Animation {
     played: boolean
     finished: boolean
     contexts: any[]
+    contextsBackup: CanvasRenderingContext2D[] // backup
 
     endFrame: number // -1 means to the end
     startFrame: number
@@ -46,6 +47,7 @@ class Animation {
         this.played = false
         this.finished = false
         this.contexts = []
+        this.contextsBackup = []
         this.endFrame = -1 // -1 means to the end
         this.startFrame = 0
         this.beforeHook = undefined
@@ -70,10 +72,12 @@ class Animation {
     }
 
     stop() {
+        this.contextsBackup = this.contexts.map((item: CanvasRenderingContext2D) => item);
         this.contexts = [];
-        this.rewind()
+        this.rewind();
+          
         this.onceHookMap.stop.forEach((func: Function) => {
-            func()
+            func() 
         })
         this.onceHookMap.stop = [];
         this.hookmap.stop.forEach((func: Function) => {
@@ -96,6 +100,12 @@ class Animation {
         this.played = true
         requestAnimationFrame((time: number) => {
             this.tick(time)
+        })
+    }
+
+    clear() {
+        this.contextsBackup.forEach((ctx) => {
+            ctx.clearRect(0, 0, this.width, this.height);
         })
     }
 

@@ -82,6 +82,10 @@ apng.animateImage(image1, false).then((anim) => {
 
 用途:停止播放
 
+#### anim.clear()
+
+用途:清除内容
+
 #### anim.start()
 
 用途:搭配 pause 暂停使用,重新开始播放

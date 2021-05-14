@@ -13,6 +13,7 @@ declare class Animation {
     played: boolean;
     finished: boolean;
     contexts: any[];
+    contextsBackup: CanvasRenderingContext2D[];
     endFrame: number;
     startFrame: number;
     beforeHook: Function | null;
@@ -27,6 +28,7 @@ declare class Animation {
     stop(): void;
     pause(frameNumber?: number): void;
     start(frameNumber?: number): void;
+    clear(): void;
     before(func: Function): void;
     after(func: Function): void;
     on(hook: string, callback: Function): void;
