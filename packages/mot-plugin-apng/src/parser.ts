@@ -109,7 +109,6 @@ class Parser extends Loader {
 
         let bytes: Uint8Array = new Uint8Array(buffer);
 
-        console.log(bytes)
         return new Promise((resolve, reject) => {
 
             if (!this.checkPngSignature(bytes)) {

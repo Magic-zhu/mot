@@ -17,7 +17,7 @@ let apng = new APNG();
 
 ## 集成在 mot 库中使用
 
-正在开发💦
+正在开发 💦
 
 ## API
 
@@ -44,7 +44,7 @@ apng
 
 - 参数 1 `img` :HTMLImgElement 需要解析的 img dom 元素<br>
 - 参数 2 `autoplay` :boolean 是否自动播放<br>
-- 参数 3 `independent` :boolean 是否需要独立控制器 >> 当检测到相同url地址时 为了性能 默认会共用一个控制器增加canvas上下文,当设置为true是 会为当前项独立新增一个控制器<br>
+- 参数 3 `independent` :boolean 是否需要独立控制器 >> 当检测到相同 url 地址时 为了性能 默认会共用一个控制器增加 canvas 上下文,当设置为 true 是 会为当前项独立新增一个控制器<br>
 
 返回:promise `anim`<br>
 
@@ -121,16 +121,16 @@ apng.animateImage(image1, false).then((anim) => {
 
 用途:状态监听
 
-| 参数名   | 数据类型 | 用途                          | 默认值 |
-| -------- | -------- | ----------------------------- | ------ |
-| hook     | string   | 监听的状态 目前只开放了'stop' |        |
-| callback | function | 回调函数 stop 时触发回调      |        |
+| 参数名   | 数据类型 | 用途                                    | 默认值 |
+| -------- | -------- | --------------------------------------- | ------ |
+| hook     | string   | 监听的状态 目前只开放了'stop','allStop' |        |
+| callback | function | 回调函数 stop 时触发回调                |        |
 
 #### anim.once(hook,callback)
 
 用途:一次性状态监听
 
-| 参数名   | 数据类型 | 用途                          | 默认值 |
-| -------- | -------- | ----------------------------- | ------ |
-| hook     | string   | 监听的状态 目前只开放了'stop' |        |
-| callback | function | 回调函数 stop 时触发回调      |        |
+| 参数名   | 数据类型 | 用途                                    | 默认值 |
+| -------- | -------- | --------------------------------------- | ------ |
+| hook     | string   | 监听的状态 目前只开放了'stop','allStop' |        |
+| callback | function | 回调函数 stop 时触发回调                |        |

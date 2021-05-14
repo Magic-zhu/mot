@@ -26,11 +26,13 @@ class Animation {
     manualPlayNum: number
 
     hookmap: HookMap = {
-        stop: []
+        stop: [],
+        allStop: () => { },
     }
 
     onceHookMap: HookMap = {
-        stop: []
+        stop: [],
+        allStop: () => { },
     }
 
     constructor() {
@@ -75,11 +77,13 @@ class Animation {
         this.contextsBackup = this.contexts.map((item: CanvasRenderingContext2D) => item);
         this.contexts = [];
         this.rewind();
-          
+        this.onceHookMap.allStop();
+        this.onceHookMap.allStop = () => { };
         this.onceHookMap.stop.forEach((func: Function) => {
-            func() 
+            func()
         })
         this.onceHookMap.stop = [];
+        this.hookmap.allStop();
         this.hookmap.stop.forEach((func: Function) => {
             func()
         })
@@ -123,7 +127,10 @@ class Animation {
         }
         switch (hook) {
             case 'stop':
-                this.hookmap.stop.push(callback)
+                this.hookmap.stop.push(callback);
+                break
+            case 'allStop':
+                this.hookmap.allStop = callback;
                 break
         }
     }
@@ -135,6 +142,9 @@ class Animation {
         switch (hook) {
             case 'stop':
                 this.onceHookMap.stop.push(callback);
+                break
+            case 'allStop':
+                this.onceHookMap.allStop = callback;
                 break
         }
     }

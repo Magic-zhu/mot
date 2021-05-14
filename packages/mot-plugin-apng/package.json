@@ -1,17 +1,15 @@
 {
   "name": "mot-plugin-apng",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "",
   "main": "build/mot-pluginapng-es.js",
   "scripts": {
     "build": "rollup -c",
-    "start": "rollup -c -w",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "start": "rollup -c -w"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Magic-zhu/apng-canvas-typescript.git"
+    "url": "git+https://github.com/Magic-zhu/mot.git"
   },
   "keywords": [
     "apng",
@@ -20,9 +18,8 @@
   "author": "magic-zhu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Magic-zhu/apng-canvas-typescript/issues"
+    "url": "https://github.com/Magic-zhu/mot/issues"
   },
-  "homepage": "https://github.com/Magic-zhu/apng-canvas-typescript#readme",
   "devDependencies": {
     "rollup-plugin-dts": "^2.0.1",
     "rollup-plugin-terser": "^7.0.2",

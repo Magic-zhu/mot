@@ -7,4 +7,4 @@
 - 🔩 基于插件
 
 <!-- [GitHub](https://github.com/docsifyjs/docsify/) -->
-[Get Started](/zh-cn/)
+[Get Started](/zh-cn/index.md)

@@ -90,8 +90,8 @@
             })
             anim.setOptions({ playNum: 1 })
             anim.play()
-            anim.on('stop',()=>{
-
+            anim.on('allStop',()=>{
+               
             })
             // setTimeout(()=>{
             //     anim.stop()
@@ -110,8 +110,8 @@
             anim.setOptions({ playNum: 1 })
             anim.play()
             
-            anim.on('stop',()=>{
-
+            anim.on('allStop',()=>{
+                console.log('here')
             })
         })
     apng.animateImage(image2, false)
