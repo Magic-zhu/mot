@@ -1,10 +1,30 @@
 * 快速开始
     * [介绍](/zh-cn/index.md)    
-    * [安装](/zh-cn/)
+    * [快速上手](/zh-cn/intsall.md)
+* Apng解析
+    * 简易教程
+        * [快速上手](/zh-cn/apng/install.md)
+        * [将图片转成canvas](/zh-cn/apng/animate.md)
+        * [是否自动播放](/zh-cn/apng/play.md)
+        * [设定播放参数](/zh-cn/apng/param.md)
+        * [监听播放结束](/zh-cn/apng/on.md)
+        * [独立控制器](/zh-cn/apng/control.md)
+    * 进阶
+        * [Cache插件永久缓存](/zh-cn/apng/cache.md)    
 * dom渲染
     * 简易教程
+        * [快速上手](/zh-cn/dom/install.md)
+        * [位移](/zh-cn/dom/install.md)
+        * [旋转](/zh-cn/dom/install.md)
+        * [放大缩小](/zh-cn/dom/install.md)
+        * [属性变化](/zh-cn/dom/install.md)
     * 进阶
         * [路径动画](/zh-cn/)
         * [时间轴动画]()
         * [自定义速度曲线]()
+* 小程序渲染
+    * 敬请期待        
 * canvas2D渲染
+    * 敬请期待
+* webgl渲染
+    * 敬请期待

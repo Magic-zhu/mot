@@ -275,6 +275,10 @@
             return this;
         };
         AnimationLanguageSupport.prototype.path = function () {
+            if (Motion.plugins['mot-plugin-path'] === undefined) {
+                console.error("'path()':this function is based on 'path' plugin");
+                return;
+            }
             var action = this.initAction();
             action.action = 'path';
             return action;

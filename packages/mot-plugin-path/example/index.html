@@ -117,7 +117,7 @@
     apng.animateImage(image2, false)
         .then(anim => {
             anim.once('stop', () => {
-                console.log('播放完成')
+                alert('播放完成')
             })
             document.getElementById('btn1').addEventListener('click', () => {
                 anim.pause()
@@ -126,7 +126,6 @@
                 anim.start()
             })
             document.getElementById('btn3').addEventListener('click', () => {
-                anim.setOptions({ keep: true })
                 anim.play()
             })
             document.getElementById('btn4').addEventListener('click', () => {

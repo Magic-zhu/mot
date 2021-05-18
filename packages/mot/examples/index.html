@@ -13,7 +13,7 @@
 </body>
 <script>
     let motion = new mot()
-    mot.once('connect',(data)=>{
+    mot.on('connect',(data)=>{
         console.log(data)
     })
 
@@ -21,6 +21,7 @@
     mot.emit('connect',2)
     mot.emit('connect',3)
     mot.emit('connect',4)
+    mot.create().path()
 </script>
 
 </html>

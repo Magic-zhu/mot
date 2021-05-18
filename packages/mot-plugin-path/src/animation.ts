@@ -24,7 +24,6 @@ class Animation {
     pauseNum: number
     manualEndNum: number
     manualPlayNum: number
-    keep: boolean
 
     hookmap: HookMap = {
         stop: [],
@@ -58,7 +57,6 @@ class Animation {
         this.pauseNum = 0
         this.manualEndNum = -1
         this.manualPlayNum = 0
-        this.keep = false
     }
 
     /**
@@ -77,9 +75,7 @@ class Animation {
 
     stop() {
         this.contextsBackup = this.contexts.map((item: CanvasRenderingContext2D) => item);
-        if (this.keep === false) {
-            this.contexts = [];
-        }
+        this.contexts = [];
         this.rewind();
         this.onceHookMap.allStop();
         this.onceHookMap.allStop = () => { };
@@ -100,7 +96,6 @@ class Animation {
         }
         this.pauseNum = this.fNum
         this.stop()
-        this.contexts = this.contextsBackup
     }
 
     start(frameNumber?: number) {
@@ -173,7 +168,6 @@ class Animation {
     setOptions(options: AnimationOptions) {
         if (options.rate !== undefined) this.rate = options.rate <= 0 ? 1 : options.rate
         if (options.playNum !== undefined) this.manualPlayNum = options.playNum < 0 ? 0 : options.playNum
-        if (options.keep !== undefined) this.keep = options.keep
     }
 
     addContext(ctx: CanvasRenderingContext2D) {

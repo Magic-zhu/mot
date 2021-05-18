@@ -1,4 +1,3 @@
-
 interface Frame {
     width?: number
     height?: number
@@ -10,14 +9,15 @@ interface Frame {
     dataParts?: any[]
 }
 
-export type FrameItem = Frame | null
+type FrameItem = Frame | null
 
-export interface AnimationOptions {
+interface AnimationOptions {
     rate?: number
     playNum?: number
-    keep?:boolean
 }
 
-export interface HookMap {
+interface HookMap {
     [key:string]:any
 }
+
+export { AnimationOptions, FrameItem, HookMap };

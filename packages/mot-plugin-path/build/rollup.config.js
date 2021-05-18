@@ -20,8 +20,8 @@ export default [{
   ],
 },
 {
-  input: ["./src/interface.d.ts"],
-  output: [{ file: "build/index.d.ts", format: "es" }],
+  input: "./src/interface.d.ts",
+  output: [{ file: "build/interface.d.ts", format: "es" }],
   plugins: [dts()],
 }
 ]

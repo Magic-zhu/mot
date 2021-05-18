@@ -10,6 +10,7 @@ import {
     SkewOptions,
     StatusDescription,
 } from '../@types'
+import Motion from '../base';
 
 import {
     isUndef,
@@ -154,6 +155,10 @@ class AnimationLanguageSupport {
     }
 
     path(): Action {
+        if (Motion.plugins['mot-plugin-path'] === undefined) {
+            console.error(`'path()':this function is based on 'path' plugin`)
+            return
+        }
         let action = this.initAction()
         action.action = 'path'
         return action

@@ -15,7 +15,6 @@ export type FrameItem = Frame | null
 export interface AnimationOptions {
     rate?: number
     playNum?: number
-    keep?:boolean
 }
 
 export interface HookMap {

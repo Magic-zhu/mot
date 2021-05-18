@@ -21,7 +21,6 @@ declare class Animation {
     pauseNum: number;
     manualEndNum: number;
     manualPlayNum: number;
-    keep: boolean;
     hookmap: HookMap;
     onceHookMap: HookMap;
     constructor();
