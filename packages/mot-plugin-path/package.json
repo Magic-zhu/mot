@@ -2,7 +2,7 @@
   "name": "mot-plugin-path",
   "version": "0.1.6",
   "description": "",
-  "main": "build/mot-plugin-apng-es.min.js",
+  "main": "build/mot-plugin-path-es.min.js",
   "scripts": {
     "build": "rollup -c",
     "start": "rollup -c -w"

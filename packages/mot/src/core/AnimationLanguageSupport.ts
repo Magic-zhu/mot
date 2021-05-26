@@ -11,7 +11,6 @@ import {
     StatusDescription,
 } from '../@types'
 import Motion from '../base';
-
 import {
     isUndef,
     copyOptions,
@@ -161,6 +160,7 @@ class AnimationLanguageSupport {
         }
         let action = this.initAction()
         action.action = 'path'
+        Motion.createPath()
         return action
     }
 

@@ -1,10 +1,15 @@
 import {
     Plugin,
     PluginsMap,
+    MoveOptions,
+    ScaleOptions,
+    RotateOptions,
+    AttributeOptions,
 } from '../@types'
 import EventEmitter from '../core/EventEmitter'
 import AnimationLanguageSupport from '../core/AnimationLanguageSupport'
 import { isUndef } from '../utils/share'
+
 class Motion extends EventEmitter {
 
     static plugins: PluginsMap = {}
@@ -33,6 +38,8 @@ class Motion extends EventEmitter {
         return this
     }
 
+    static current: HTMLElement = null
+
     constructor() {
         super()
     }
@@ -46,8 +53,58 @@ class Motion extends EventEmitter {
         this[methodName] = method
     }
 
+    // TODO: 插件注册方法 类型检测问题 预先定义
+    static createPath: Function
+    static dom: Function
+
     static create() {
         return new AnimationLanguageSupport()
+    }
+
+    // for dom animation
+    static get(id: string) {
+        this.current = document.getElementById(id)
+        return this
+    }
+
+    static checkIfHasDomRender(callback) {
+        if (this.plugins['DomRender'] === undefined) {
+            console.error(`plugin miss:this function is based on 'domRender' plugin`)
+            return
+        }
+        callback()
+    }
+
+    static moveTo(options: MoveOptions | number, y?: number, duration?: number) {
+        this.checkIfHasDomRender(() => {
+            let ani = this.create().moveTo(options, y, duration);
+            this.dom(this.current, ani).render();
+        })
+        return this
+    }
+
+    static scale(options: ScaleOptions | number, y?: number, duration?: number) {
+        this.checkIfHasDomRender(() => {
+            let ani = this.create().scale(options, y, duration);
+            this.dom(this.current, ani).render();
+        })
+        return this
+    }
+
+    static rotate(options: RotateOptions | number, duration?: number) {
+        this.checkIfHasDomRender(() => {
+            let ani = this.create().scale(options, duration);
+            this.dom(this.current, ani).render();
+        })
+        return this
+    }
+
+    static attribute(options: AttributeOptions, value?: string, duration?: number) {
+        this.checkIfHasDomRender(() => {
+            let ani = this.create().attribute(options, value, duration);
+            this.dom(this.current, ani).render();
+        })
+        return this
     }
 }
 

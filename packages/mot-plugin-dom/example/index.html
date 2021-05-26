@@ -45,10 +45,11 @@
     mot.on('domRenderBeforeRender', () => {
         console.log('domRenderBeforeRender')
     })
+
     let Animation = mot.create()
     Animation
         .step([
-            { action: 'move', x: 100, y: 100 },
+            { action: 'move', x: '50vw', y: 100 },
             { action: 'scale', x: 2, y: 2 },
             { action: 'attribute', key: "borderRadius", value: "50%" },
         ])
@@ -64,6 +65,13 @@
     let renderer = mot.dom(document.getElementById('app'), Animation)
     controller.addEventListener('click', () => {
         renderer.render()
+        // mot.get('app').moveTo(100,100)
+        // setTimeout(()=>{
+        //     mot.attribute('backgroundColor','green')
+        // },400)
+        // setTimeout(()=>{
+        //     mot.moveTo(0,0)
+        // },800)
     })
 </script>
 

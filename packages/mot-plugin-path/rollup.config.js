@@ -6,11 +6,11 @@ export default [{
   input: 'src/index.ts',
   output: [
     {
-      file: 'build/mot-plugin-apng-iife.min.js',
+      file: 'build/mot-plugin-path-iife.min.js',
       format: 'iife'
     },
     {
-      file: 'build/mot-plugin-apng-es.min.js',
+      file: 'build/mot-plugin-path-es.min.js',
       format: 'esm'
     }
   ],
@@ -19,10 +19,10 @@ export default [{
     terser(),
   ],
 },
-{
-  input: "./src/interface.d.ts",
-  output: [{ file: "build/interface.d.ts", format: "es" }],
-  plugins: [dts()],
-}
+// {
+//   input: "./src/interface.d.ts",
+//   output: [{ file: "build/interface.d.ts", format: "es" }],
+//   plugins: [dts()],
+// }
 ]
 

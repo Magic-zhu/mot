@@ -281,6 +281,7 @@
             }
             var action = this.initAction();
             action.action = 'path';
+            Motion.createPath();
             return action;
         };
         AnimationLanguageSupport.prototype.wait = function (time) {
@@ -331,7 +332,52 @@
         Motion.create = function () {
             return new AnimationLanguageSupport();
         };
+        // for dom animation
+        Motion.get = function (id) {
+            this.current = document.getElementById(id);
+            return this;
+        };
+        Motion.checkIfHasDomRender = function (callback) {
+            if (this.plugins['DomRender'] === undefined) {
+                console.error("plugin miss:this function is based on 'domRender' plugin");
+                return;
+            }
+            callback();
+        };
+        Motion.moveTo = function (options, y, duration) {
+            var _this = this;
+            this.checkIfHasDomRender(function () {
+                var ani = _this.create().moveTo(options, y, duration);
+                _this.dom(_this.current, ani).render();
+            });
+            return this;
+        };
+        Motion.scale = function (options, y, duration) {
+            var _this = this;
+            this.checkIfHasDomRender(function () {
+                var ani = _this.create().scale(options, y, duration);
+                _this.dom(_this.current, ani).render();
+            });
+            return this;
+        };
+        Motion.rotate = function (options, duration) {
+            var _this = this;
+            this.checkIfHasDomRender(function () {
+                var ani = _this.create().scale(options, duration);
+                _this.dom(_this.current, ani).render();
+            });
+            return this;
+        };
+        Motion.attribute = function (options, value, duration) {
+            var _this = this;
+            this.checkIfHasDomRender(function () {
+                var ani = _this.create().attribute(options, value, duration);
+                _this.dom(_this.current, ani).render();
+            });
+            return this;
+        };
         Motion.plugins = {};
+        Motion.current = null;
         return Motion;
     }(EventEmitter));
 
