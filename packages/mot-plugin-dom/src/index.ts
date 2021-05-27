@@ -291,19 +291,7 @@ class DomRender {
         let array = property.split(',').filter(item => item !== '' || item !== undefined);
         return array
     }
-
-    // addTransitionStyle(dom: HTMLElement, attr: string, time: number, timeFunc: string) {
-    //     let p = dom.style.transitionProperty
-    //     if (!p) {
-    //         p = ""
-    //     } else {
-    //         p = p.charAt(p.length - 1) === ',' ? p : p + ','
-    //     }
-    //     if (p.indexOf('attr') !== -1) {
-    //         return
-    //     }
-    //     dom.style.transitionProperty = p + attr + ','
-    // }
+    
 }
 
 if (window['DomRender']) {
