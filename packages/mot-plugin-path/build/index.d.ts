@@ -19,12 +19,14 @@ declare class Path {
     cubicOut(t: any): number;
     cubicInOut(t: any): number;
     quadraticBelzierCurve(): void;
-    Bezier(p0: number, p1: number, p2: number, p3: number, t: number): any;
-    getBezierNowPoint(p0: any, p1: any, p2: any, p3: any, num: any, tick: any): {
-        x: any;
-        y: any;
-        z: any;
+    Bezier2P(p0: number, p1: number, p2: number, t: number): number;
+    getBezierNowPoint2P(p0: Point, p1: Point, p2: Point, num: number, tick: number): Point;
+    create2PBezier(p0: Point, p1: Point, p2: Point, num?: number, tick?: number): any[];
+    Bezier3P(p0: number, p1: number, p2: number, p3: number, t: number): number;
+    getBezierNowPoint3P(p0: Point, p1: Point, p2: Point, p3: Point, num: number, tick: number): {
+        x: number;
+        y: number;
     };
-    create3DBezier(p0: Point, p1: Point, p2: Point, p3: Point, num?: number, tick?: number): any[];
+    create3PBezier(p0: Point, p1: Point, p2: Point, p3: Point, num?: number, tick?: number): any[];
 }
 export default Path;

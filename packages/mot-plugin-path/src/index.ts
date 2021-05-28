@@ -88,17 +88,37 @@ class Path {
 
     }
 
+    Bezier2P(p0: number, p1: number, p2: number, t: number) {
+        let P0: number, P1: number, P2: number;
+        P0 = p0 * (Math.pow((1 - t), 2));
+        P1 = p1 * 2 * t * (1 - t);
+        P2 = p2 * t * t;
+        return P0 + P1 + P2
+    }
+
+    getBezierNowPoint2P(p0: Point, p1: Point, p2: Point, num: number, tick: number): Point {
+        return {
+            x: this.Bezier2P(p0.x, p1.x, p2.x, num * tick),
+            y: this.Bezier2P(p0.y, p1.y, p2.y, num * tick),
+        }
+    }
+
+    create2PBezier(p0: Point, p1: Point, p2: Point, num: number = 100, tick: number = 1) {
+        let t = tick / (num - 1);
+        let points = [];
+        for (let i = 0; i < num; i++) {
+            let point = this.getBezierNowPoint2P(p0, p1, p2, i, tick);
+            points.push({ x: point.x, y: point.y });
+        }
+        return points;
+    }
+
     /**
-     * 四阶贝塞尔曲线公式
-     * @param P0 
-     * @param P1 
-     * @param P2 
-     * @param P3 
-     * @param t 
+     * 三次方塞尔曲线公式
      * @returns 
      */
-    Bezier(p0: number, p1: number, p2: number, p3: number, t: number) {
-        let P0, P1, P2, P3;
+    Bezier3P(p0: number, p1: number, p2: number, p3: number, t: number) {
+        let P0: number, P1: number, P2: number, P3: number;
         P0 = p0 * (Math.pow((1 - t), 3));
         P1 = 3 * p1 * t * (Math.pow((1 - t), 2));
         P2 = 3 * p2 * Math.pow(t, 2) * (1 - t);
@@ -107,16 +127,18 @@ class Path {
         return P0 + P1 + P2 + P3;
     }
 
-    getBezierNowPoint(p0, p1, p2, p3, num, tick) {
+    /**
+     * 获取坐标
+     */
+    getBezierNowPoint3P(p0: Point, p1: Point, p2: Point, p3: Point, num: number, tick: number) {
         return {
-            x: this.Bezier(p0.x, p1.x, p2.x, p3.x, num * tick),
-            y: this.Bezier(p0.y, p1.y, p2.y, p3.y, num * tick),
-            z: this.Bezier(p0.z, p1.z, p2.z, p3.z, num * tick),
+            x: this.Bezier3P(p0.x, p1.x, p2.x, p3.x, num * tick),
+            y: this.Bezier3P(p0.y, p1.y, p2.y, p3.y, num * tick),
         }
     }
 
     /**
-    * 生成四阶贝塞尔曲线定点数据
+    * 生成三次方贝塞尔曲线定点数据
     * @param p0   起始点  { x : number, y : number}
     * @param p1   控制点1 { x : number, y : number}
     * @param p2   控制点2 { x : number, y : number}
@@ -125,16 +147,15 @@ class Path {
     * @param tick 绘制系数
     * @returns {{points: Array, num: number}}
     */
-    create3DBezier(p0:Point, p1:Point, p2:Point, p3:Point, num:number = 100, tick:number = 1) {
-        let pointMum = num || 100;
-        let _tick = tick || 1;
+    create3PBezier(p0: Point, p1: Point, p2: Point, p3: Point, num: number = 100, tick: number = 1) {
+        let pointMum = num;
+        let _tick = tick;
         let t = _tick / (pointMum - 1);
         let points = [];
         for (let i = 0; i < pointMum; i++) {
-            let point = this.getBezierNowPoint(p0, p1, p2, p3, i, t);
-            points.push({x:point.x,y:point.y});
+            let point = this.getBezierNowPoint3P(p0, p1, p2, p3, i, t);
+            points.push({ x: point.x, y: point.y });
         }
-
         return points;
     }
 }
