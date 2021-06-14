@@ -1,5 +1,5 @@
 {
-  "name": "mot",
+  "name": "maigc-mot",
   "version": "0.0.33",
   "description": "先占个名字坑位",
   "main": "src/index.ts",
