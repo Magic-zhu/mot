@@ -73,7 +73,7 @@ interface StepOptions {
 
 interface StatusDescription {
     type:string,
-    description:string, 
+    description?:string, 
 }
 
 interface Plugin {

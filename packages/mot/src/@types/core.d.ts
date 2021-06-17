@@ -73,5 +73,5 @@ export interface StepOptions {
 
 export interface StatusDescription {
     type:string,
-    description:string, 
+    description?:string, 
 }

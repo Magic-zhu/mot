@@ -160,12 +160,26 @@
             };
         };
         AnimationLanguageSupport.prototype.statusOn = function (statusDescription) {
-            //    [{
-            //        type:'',
-            //        description:''
-            //    }]
+            var action = {
+                type: 'single',
+                action: 'statusOn',
+                status: statusDescription,
+                parent: null,
+                children: [],
+            };
+            this.actions.children.push(action);
+            return this;
         };
-        AnimationLanguageSupport.prototype.statusOff = function (type) {
+        AnimationLanguageSupport.prototype.statusOff = function (statusDescription) {
+            var action = {
+                type: 'single',
+                action: 'statusOff',
+                status: statusDescription,
+                parent: null,
+                children: [],
+            };
+            this.actions.children.push(action);
+            return this;
         };
         AnimationLanguageSupport.prototype.step = function (args, options) {
             if (options === void 0) { options = {}; }

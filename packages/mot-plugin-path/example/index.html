@@ -28,7 +28,19 @@
 
 <body>
     <div id='app'></div>
+    <pre class="html" name="code"><form>
+        <input type="text" id="txt" />
+        <input type="button" value="Start" onClick="numCount()" />
+    </form>
 </body>
+<script type="text/javascript">
+    var num=0;
+    function numCount(){
+        document.getElementById('txt').value=num;
+        num=num+1;
+        console.log(setTimeout("numCount()",1000));
+    }
+    </script>
 <script src='../build/mot-plugin-path-iife.min.js'></script>
 <script src='../../mot/dist/index.iife.js'></script>
 <script src='../../mot-plugin-dom/dist/index.iife.js'></script>

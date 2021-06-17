@@ -6,6 +6,7 @@ import {
     ScaleOptions,
 } from "./@types"
 
+declare const window: any;
 class DomRender {
 
     static pluginName: string = 'DomRender'
@@ -253,7 +254,7 @@ class DomRender {
     }
 
     // aaaBbb=>‘aaa-bbb’
-    humpParse(s) {
+    humpParse(s: string) {
         const reg = /([a-z]+)|([A-Z]{1}[a-z]+)/g;
         let r = s.match(reg)
         let attr = ''
@@ -291,7 +292,50 @@ class DomRender {
         let array = property.split(',').filter(item => item !== '' || item !== undefined);
         return array
     }
-    
+
+    /**
+     * 在文档中添加一条样式表规则（这可能是动态改变 class 名的更好的实现方法，
+     * 使得 style 样式内容可以保留在真正的样式表中，以斌面添加额外的元素到 DOM 中）。
+     * 注意这里有必要声明一个数组，因为 ECMAScript 不保证对象按预想的顺序遍历，
+     * 并且 CSS 也是依赖于顺序的。
+     * 类型为数组的参数 decls 接受一个 JSON 编译的数组。
+     * @example
+    addStylesheetRules([
+      ['h2', // 还接受第二个参数作为数组中的数组
+        ['color', 'red'],
+        ['background-color', 'green', true] // 'true' for !important rules
+      ],
+      ['.myClass',
+        ['background-color', 'yellow']
+      ]
+    ]);
+     */
+    addStylesheetRules(decls) {
+        let style = document.createElement('style');
+        document.getElementsByTagName('head')[0].appendChild(style);
+        if (!window.createPopup) { /* For Safari */
+            style.appendChild(document.createTextNode(''));
+        }
+        let s = document.styleSheets[document.styleSheets.length - 1];
+        for (let i = 0, dl = decls.length; i < dl; i++) {
+            let j = 1, decl = decls[i], selector = decl[0], rulesStr = '';
+            if (Object.prototype.toString.call(decl[1][0]) === '[object Array]') {
+                decl = decl[1];
+                j = 0;
+            }
+            for (let rl = decl.length; j < rl; j++) {
+                let rule = decl[j];
+                rulesStr += rule[0] + ':' + rule[1] + (rule[2] ? ' !important' : '') + ';\n';
+            }
+
+            if (s.insertRule) {
+                s.insertRule(selector + '{' + rulesStr + '}', s.cssRules.length);
+            }
+            else { /* IE */
+                s.addRule(selector, rulesStr, -1);
+            }
+        }
+    }
 }
 
 if (window['DomRender']) {

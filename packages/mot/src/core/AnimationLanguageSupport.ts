@@ -38,14 +38,27 @@ class AnimationLanguageSupport {
     }
 
     statusOn(statusDescription: StatusDescription) {
-        //    [{
-        //        type:'',
-        //        description:''
-        //    }]
+        let action: Action = {
+            type: 'single',
+            action: 'statusOn',
+            status: statusDescription,
+            parent: null,
+            children: [],
+        }
+        this.actions.children.push(action);
+        return this
     }
 
-    statusOff(type: string) {
-
+    statusOff(statusDescription: StatusDescription) {
+        let action: Action = {
+            type: 'single',
+            action: 'statusOff',
+            status: statusDescription,
+            parent: null,
+            children: [],
+        }
+        this.actions.children.push(action);
+        return this
     }
 
     step(args: any[], options: StepOptions = {}) {

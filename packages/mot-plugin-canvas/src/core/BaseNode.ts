@@ -1,10 +1,13 @@
-
+let _BaseNodeId = 0;
 class BaseNode {
 
-    id: number | string
+    id: number | string;  // unique identification
 
-    x: number = 0;
-    y: number = 0;
+    x: number = 0;        // absolute position
+    y: number = 0;        // absolute position
+
+    parent: any = null;
+    children: any = [];
 
     attributes = {
         width: 0,
@@ -15,7 +18,7 @@ class BaseNode {
     }
 
     constructor() {
-
+        Object.defineProperty( this, 'id', { value: _BaseNodeId ++ } );
     }
 
     copy() {

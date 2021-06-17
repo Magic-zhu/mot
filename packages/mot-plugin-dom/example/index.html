@@ -40,6 +40,8 @@
     <button id="animateIt">animate it</button>
 </body>
 <script>
+    console.log(document.styleSheets)
+    // document.styleSheets.insertRule('')
     let controller = document.getElementById('animateIt');
     mot.use(DomRender)
     mot.on('domRenderBeforeRender', () => {
@@ -48,19 +50,20 @@
 
     let Animation = mot.create()
     Animation
-        .step([
-            { action: 'move', x: '50vw', y: 100 },
-            { action: 'scale', x: 2, y: 2 },
-            { action: 'attribute', key: "borderRadius", value: "50%" },
-        ])
-        .moveTo(200, 200)
-        .scale(1)
-        .attribute('borderRadius','0%')
-        .rotate(90, 200)
-        .rotate(45)
-        .wait(500)
-        .moveTo({ x: 0, y: 0, timeFunction: 'ease-in-out' })
-        .rotate(0)
+        // .step([
+        //     { action: 'move', x: '50vw', y: 100 },
+        //     { action: 'scale', x: 2, y: 2 },
+        //     { action: 'attribute', key: "borderRadius", value: "50%" },
+        // ])
+        // .moveTo(200, 200)
+        // .scale(1)
+        // .attribute('borderRadius','0%')
+        // .rotate(90, 200)
+        // .rotate(45)
+        // .wait(500)
+        // .moveTo({ x: 0, y: 0, timeFunction: 'ease-in-out' })
+        // .rotate(0)
+        .statusOn({type:'rotate',description:"15s"})
     console.log(Animation)
     let renderer = mot.dom(document.getElementById('app'), Animation)
     controller.addEventListener('click', () => {
