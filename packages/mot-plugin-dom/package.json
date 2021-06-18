@@ -25,6 +25,10 @@
   "homepage": "https://pkg.poizon.com/duapp/web/npm/animation/mot-plugin-dom.git#readme",
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "eslint": "^7.28.0",
+    "eslint-config-google": "^0.14.0",
     "jest": "^26.6.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-dts": "^2.0.1",
