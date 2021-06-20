@@ -150,30 +150,52 @@ var AnimationLanguageSupport = /** @class */ (function () {
     }
     AnimationLanguageSupport.prototype.initAction = function () {
         return {
-            type: 'single',
+            type: "single",
             parent: this.actions,
             duration: 400,
             timeFunction: "linear",
         };
     };
-    AnimationLanguageSupport.prototype.statusOn = function (statusDescription) {
+    AnimationLanguageSupport.prototype.statusOn = function (statusDescription, description) {
+        var _statusDescription;
+        if (isObject(statusDescription)) {
+            _statusDescription = statusDescription;
+        }
+        else {
+            _statusDescription = {
+                type: statusDescription,
+                description: description,
+            };
+        }
         var action = {
-            type: 'single',
-            action: 'statusOn',
-            status: statusDescription,
+            type: "single",
+            action: "statusOn",
+            status: _statusDescription,
             parent: null,
             children: [],
+            duration: -1,
         };
         this.actions.children.push(action);
         return this;
     };
     AnimationLanguageSupport.prototype.statusOff = function (statusDescription) {
+        var _statusDescription;
+        if (isObject(statusDescription)) {
+            _statusDescription = statusDescription;
+        }
+        else {
+            _statusDescription = {
+                type: statusDescription,
+                description: "",
+            };
+        }
         var action = {
-            type: 'single',
-            action: 'statusOff',
-            status: statusDescription,
+            type: "single",
+            action: "statusOff",
+            status: _statusDescription,
             parent: null,
             children: [],
+            duration: -1,
         };
         this.actions.children.push(action);
         return this;
@@ -183,16 +205,21 @@ var AnimationLanguageSupport = /** @class */ (function () {
         if (args.length == 0)
             return;
         var actions = {
-            type: 'group',
+            type: "group",
             parent: null,
             children: [],
         };
         actions.duration = isUndef(options.duration) ? 400 : options.duration;
-        actions.timeFunction = isUndef(options.timeFunction) ? 'linear' : options.timeFunction;
+        actions.timeFunction = isUndef(options.timeFunction)
+            ? "linear"
+            : options.timeFunction;
         args.forEach(function (res) {
             res.parent = actions;
             res.duration = actions.duration;
-            res.timeFunction = res.timeFunction === undefined ? actions.timeFunction : res.timeFunction;
+            res.timeFunction =
+                res.timeFunction === undefined
+                    ? actions.timeFunction
+                    : res.timeFunction;
             actions.children.push(res);
         });
         this.actions.children.push(actions);
@@ -200,9 +227,9 @@ var AnimationLanguageSupport = /** @class */ (function () {
     };
     AnimationLanguageSupport.prototype.translate = function (options, y, duration) {
         var action = this.initAction();
-        action.action = 'translate';
+        action.action = "translate";
         if (isObject(options)) {
-            copyOptions(options, action, ['x', 'y', 'z', 'duration', 'timeFunction']);
+            copyOptions(options, action, ["x", "y", "z", "duration", "timeFunction"]);
         }
         else {
             action.x = options;
@@ -214,9 +241,9 @@ var AnimationLanguageSupport = /** @class */ (function () {
     };
     AnimationLanguageSupport.prototype.moveTo = function (options, y, duration) {
         var action = this.initAction();
-        action.action = 'move';
+        action.action = "move";
         if (isObject(options)) {
-            copyOptions(options, action, ['x', 'y', 'duration', 'timeFunction']);
+            copyOptions(options, action, ["x", "y", "duration", "timeFunction"]);
         }
         else {
             action.x = options;
@@ -228,9 +255,9 @@ var AnimationLanguageSupport = /** @class */ (function () {
     };
     AnimationLanguageSupport.prototype.scale = function (options, y, duration) {
         var action = this.initAction();
-        action.action = 'scale';
+        action.action = "scale";
         if (isObject(options)) {
-            copyOptions(options, action, ['x', 'y', 'z', 'duration', 'timeFunction']);
+            copyOptions(options, action, ["x", "y", "z", "duration", "timeFunction"]);
         }
         else {
             if (isUndef(y)) {
@@ -248,9 +275,9 @@ var AnimationLanguageSupport = /** @class */ (function () {
     };
     AnimationLanguageSupport.prototype.rotate = function (options, duration) {
         var action = this.initAction();
-        action.action = 'rotate';
+        action.action = "rotate";
         if (isObject(options)) {
-            copyOptions(options, action, ['x', 'y', 'z', 'duration', 'timeFunction']);
+            copyOptions(options, action, ["x", "y", "z", "duration", "timeFunction"]);
         }
         else {
             action.z = options;
@@ -261,9 +288,9 @@ var AnimationLanguageSupport = /** @class */ (function () {
     };
     AnimationLanguageSupport.prototype.skew = function (options, y, duration) {
         var action = this.initAction();
-        action.action = 'skew';
+        action.action = "skew";
         if (isObject(options)) {
-            copyOptions(options, action, ['x', 'y', 'z', 'duration', 'timeFunction']);
+            copyOptions(options, action, ["x", "y", "z", "duration", "timeFunction"]);
         }
         else {
             action.x = options;
@@ -273,9 +300,14 @@ var AnimationLanguageSupport = /** @class */ (function () {
     };
     AnimationLanguageSupport.prototype.attribute = function (options, value, duration) {
         var action = this.initAction();
-        action.action = 'attribute';
+        action.action = "attribute";
         if (isObject(options)) {
-            copyOptions(options, action, ['key', 'value', 'duration', 'timeFunction']);
+            copyOptions(options, action, [
+                "key",
+                "value",
+                "duration",
+                "timeFunction",
+            ]);
         }
         else {
             action.key = options;
@@ -286,18 +318,18 @@ var AnimationLanguageSupport = /** @class */ (function () {
         return this;
     };
     AnimationLanguageSupport.prototype.path = function () {
-        if (Motion.plugins['mot-plugin-path'] === undefined) {
+        if (Motion.plugins["mot-plugin-path"] === undefined) {
             console.error("'path()':this function is based on 'path' plugin");
             return;
         }
         var action = this.initAction();
-        action.action = 'path';
+        action.action = "path";
         Motion.createPath();
         return action;
     };
     AnimationLanguageSupport.prototype.wait = function (time) {
         var action = this.initAction();
-        action.action = 'wait';
+        action.action = "wait";
         action.time = time;
         this.actions.children.push(action);
         return this;

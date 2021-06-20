@@ -22,10 +22,10 @@
     * 进阶
         * [路径动画](/zh-cn/dom/path.md)
         * [时间轴动画](/zh-cn/dom/timeline.md)
-        * [自定义速度曲线](/zh-cn/dom/curve.md)
-* 小程序渲染
-    * 敬请期待        
+        * [自定义速度曲线](/zh-cn/dom/curve.md)      
 * canvas2D渲染
     * 敬请期待
 * webgl渲染
     * 敬请期待
+* 小程序渲染
+    * 敬请期待      
