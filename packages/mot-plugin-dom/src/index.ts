@@ -63,7 +63,6 @@ class DomRender {
    * @memberof DomRender
    */
   init() {
-    console.log(document.styleSheets);
     this.originTransform = this.getOriginStyleTransform(this.target);
     this.originTransitionProperty = [];
     const animations = this.Animation.actions;
@@ -84,7 +83,7 @@ class DomRender {
     }
     if (transitionProperty !== null) {
       this.originTransitionProperty =
-        this.spliteTransitionPropertyToArray(transitionProperty);
+        this.splitTransitionPropertyToArray(transitionProperty);
     }
   }
 
@@ -150,10 +149,18 @@ class DomRender {
     let index: number = 0;
     const next = (item: StyleObject, time: number = -1) => {
       const done = () => {
-        const {style} = item;
-        // eslint-disable-next-line guard-for-in
-        for (const attr in style) {
-          this.target.style[attr] = style[attr];
+        if (item.status!=='statusOn'&& item.status!=='statusOff') {
+          const {style} = item;
+          // eslint-disable-next-line guard-for-in
+          for (const attr in style) {
+            this.target.style[attr] = style[attr];
+          }
+        } else {
+          const MAP = {
+            'statusOn': this.renderStatusOn.bind(this),
+            'statusOff': this.renderStatusOff.bind(this),
+          };
+          MAP[item.status](this.taskQueue[index]);
         }
         index++;
         if (index < len) {
@@ -177,6 +184,65 @@ class DomRender {
     }, 0);
   }
 
+  /**
+   *
+   *
+   * @param {Action} item
+   * @memberof DomRender
+   */
+  renderStatusOn(item: Action) {
+    if (
+      item.status &&
+      item.status.type === 'rotate' &&
+      item.status.description !== ''
+    ) {
+      const name = `rotate${new Date().getTime()}`;
+      let startTransform: string;
+      let endTransform: string;
+      const direction: string = item.status.description.split(',')[0].trim();
+      const params: string = item.status.description.split(',')[1].trim();
+      if (direction === 'x' || direction === 'X') {
+        startTransform = `rotateX(0)`;
+        endTransform = `rotateX(360deg)`;
+      }
+      if (direction === 'y' || direction === 'Y') {
+        startTransform = `rotateY(0)`;
+        endTransform = `rotateY(360deg)`;
+      }
+      if (direction === 'z' || direction === 'Z') {
+        startTransform = `rotateZ(0)`;
+        endTransform = `rotateZ(360deg)`;
+      }
+      this.insertKeyFrame(`@keyframes ${name} {
+          from {transform:${startTransform}}
+          to {transform:${endTransform}}
+        }`);
+      const className = `mot-class-rotate-${new Date().getTime()}`;
+      this.addStylesheetRules([
+        ['.' + className, ['animation', `${name} ${params}`]],
+      ]);
+      this.addClassName(this.target, className);
+    }
+
+    if (item.status && item.status.type === 'scale') {
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {Action} item
+   * @memberof DomRender
+   */
+  renderStatusOff(item: Action) {
+    const type = item.status.type;
+    const r: string[] = this.target.className
+        .split(' ')
+        .filter((item) => item.indexOf(`mot-class-${type}`) !== -1);
+    r.forEach((item) => {
+      this.removeClassName(this.target, item);
+    });
+  }
   /**
    *
    *
@@ -213,7 +279,7 @@ class DomRender {
    */
   mergeTransitionProperty(origin: string[], newProperty: string) {
     const newPropertyArray: string[] =
-      this.spliteTransitionPropertyToArray(newProperty);
+      this.splitTransitionPropertyToArray(newProperty);
     let transitionProperty = newProperty;
     origin.forEach((item: any) => {
       if (!newPropertyArray.includes(item)) {
@@ -241,6 +307,12 @@ class DomRender {
         styleArray.push({style: {}, duration: item.duration});
       } else if (item.action == 'wait') {
         styleArray.push({style: {}, duration: item.time});
+      } else if (item.action == 'statusOn'|| item.action == 'statusOff') {
+        styleArray.push({
+          style: {},
+          duration: item.duration,
+          status: item.action,
+        });
       } else {
         styleArray.push({
           style: this.transferAction(item),
@@ -259,31 +331,15 @@ class DomRender {
    * @memberof DomRender
    */
   transferAction(item: Action) {
-    const TYPEMAP = {
+    const TYPE_MAP = {
       translate: this.translate,
       rotate: this.rotate,
       scale: this.scale,
       attribute: this.attribute,
       move: this.move,
     };
-    return TYPEMAP[item.action].bind(this)(item);
+    return TYPE_MAP[item.action].bind(this)(item);
   }
-
-  /**
-   * keep animation
-   * only 'rorate' 'scale' support now
-   * @param {Action} item
-   * @memberof DomRender
-   */
-  statusOn(item: Action) {
-
-  }
-
-  /**
-   * clear the 'on' status
-   * @memberof DomRender
-   */
-  statusOff() {}
 
   /**
    *
@@ -456,10 +512,10 @@ class DomRender {
     const transformArray = styleString.match(/[a-zA-Z]+\s*?\(.*?\)/gms);
     return transformArray.map((item: string) => {
       try {
-        const KEYREG = /([a-zA-Z]*?)\(/;
-        const VALUEREG = /\((.*)\)/;
+        const KEY_REG = /([a-zA-Z]*?)\(/;
+        const VALUE_REG = /\((.*)\)/;
         // match the origin attributes
-        return [[item.match(KEYREG)[1]], item.match(VALUEREG)[1]];
+        return [[item.match(KEY_REG)[1]], item.match(VALUE_REG)[1]];
       } catch (error) {
         throw new Error('There is something wrong with transform style');
       }
@@ -473,13 +529,12 @@ class DomRender {
    * @return {*}  {string[]}
    * @memberof DomRender
    */
-  spliteTransitionPropertyToArray(property: string): string[] {
+  splitTransitionPropertyToArray(property: string): string[] {
     const array = property
         .split(',')
         .filter((item) => item !== '' || item !== undefined);
     return array;
   }
-
 
   /**
    * 在文档中添加一条样式表规则（这可能是动态改变 class 名的更好的实现方法，
@@ -530,6 +585,47 @@ class DomRender {
         s.addRule(selector, rulesStr, -1);
       }
     }
+  }
+
+  /**
+   * insert keyframe
+   * @param {string} keyframe
+   */
+  insertKeyFrame(keyframe: string) {
+    try {
+      const style = document.createElement('style');
+      style.type = 'text/css';
+      style.innerHTML = keyframe;
+      document.getElementsByTagName('head')[0].appendChild(style);
+    } catch (err) {
+      console.error(`insertKeyFrame error`, err);
+    }
+  }
+
+  /**
+   * add className
+   *
+   * @param {HTMLElement} dom -html element
+   * @param {string} className
+   * @memberof DomRender
+   */
+  addClassName(dom: HTMLElement, className: string) {
+    let c = dom.className;
+    c = `${c} ${className}`;
+    dom.className = c;
+  }
+
+  /**
+   * removeClassName
+   *
+   * @param {HTMLElement} dom
+   * @param {string} className
+   * @memberof DomRender
+   */
+  removeClassName(dom: HTMLElement, className: string) {
+    let c = dom.className;
+    c = c.replace(className, '');
+    dom.className = c;
   }
 }
 

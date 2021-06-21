@@ -7,6 +7,7 @@ export interface Action {
     time?: number;
     duration?: number;
     timeFunction?: string;
+    status?:StatusDescription;
 }
 
 export interface ActionTree {
@@ -16,6 +17,7 @@ export interface ActionTree {
 export interface StyleObject {
     duration: number,
     style:Object,
+    status?:string
 }
 
 export interface TranslateOptions {
@@ -55,4 +57,9 @@ export interface AttributeOptions {
     value: any;
     duration?: number;
     timeFunction?: string;
+}
+
+export interface StatusDescription {
+    type:string,
+    description?:string,
 }
