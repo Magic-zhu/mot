@@ -1,65 +1,119 @@
 let _BaseNodeId = 0;
+
+/**
+ *
+ *
+ * @class BaseNode
+ */
 class BaseNode {
+  id: number | string; // unique identification
+  x: number = 0; // absolute position
+  y: number = 0; // absolute position
+  parent: any = null;
+  children: any = [];
+  nodeType: string = 'base';
+  attributes = {
+    width: 0,
+    height: 0,
+    left: 0,
+    top: 0,
+    zIndex: 0,
+    borderRadius: 0,
+    backgroundColor: '#000000',
+    padding: [0, 0, 0, 0],
+    margin: [0, 0, 0, 0],
+  };
 
-    id: number | string;  // unique identification
+  /**
+   * Creates an instance of BaseNode.
+   * @memberof BaseNode
+   */
+  constructor() {
+    Object.defineProperty(this, 'id', {value: _BaseNodeId++});
+  }
 
-    x: number = 0;        // absolute position
-    y: number = 0;        // absolute position
+  /**
+   * copy this ndoe
+   */
+  copy() {}
 
-    parent: any = null;
-    children: any = [];
+  /**
+   *
+   *
+   * @readonly
+   * @memberof BaseNode
+   */
+  get width() {
+    return this.attributes.width;
+  }
 
-    attributes = {
-        width: 0,
-        height: 0,
-        left: 0,
-        top: 0,
-        zIndex: 0,
-    }
+  /**
+   *
+   *
+   * @readonly
+   * @memberof BaseNode
+   */
+  get height() {
+    return this.attributes.height;
+  }
 
-    constructor() {
-        Object.defineProperty( this, 'id', { value: _BaseNodeId ++ } );
-    }
+  /**
+   *
+   *
+   * @readonly
+   * @memberof BaseNode
+   */
+  get left() {
+    return this.attributes.left;
+  }
 
-    copy() {
+  /**
+   *
+   *
+   * @readonly
+   * @memberof BaseNode
+   */
+  get top() {
+    return this.attributes.top;
+  }
 
-    }
+  /**
+   * addEventListener
+   */
+  addEventListener() {}
 
-    get width() {
-        return this.attributes.width
-    }
+  /**
+   *
+   *
+   * @memberof BaseNode
+   */
+  removeEventListener() {}
 
-    get height() {
-        return this.attributes.height
-    }
+  /**
+   * removeAllListeners
+   */
+  removeAllListeners() {}
 
-    get left() {
-        return this.attributes.left
-    }
+  /**
+   *
+   *
+   * @memberof BaseNode
+   */
+  attr() {}
 
-    get top() {
-        return this.attributes.top
-    }
+  /**
+   *
+   *
+   * @memberof BaseNode
+   */
+  removeAttribute() {}
 
-    addEventListener() {
-
-    }
-
-    removeEventListener() {
-
-    }
-
-    removeAllListeners() {
-
-    }
-
-    attr() {
-
-    }
-
-    removeAttribute() {
-
-    }
+  /**
+   *
+   *
+   * @memberof BaseNode
+   */
+  append() {}
 }
 
-export default BaseNode
+export default BaseNode;

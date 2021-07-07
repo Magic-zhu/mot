@@ -1,4 +1,10 @@
-import BaseNode from './BaseNode'
-class Block extends BaseNode{
+import BaseNode from './BaseNode';
+
+/**
+ * box
+ */
+class Block extends BaseNode {
 
 }
+
+export default Block;
