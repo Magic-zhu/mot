@@ -21,6 +21,11 @@
     "url": "https://github.com/Magic-zhu/mot/issues"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "eslint": "^7.28.0",
+    "eslint-config-google": "^0.14.0",
     "@types/jest": "^26.0.23",
     "@types/mocha": "^8.2.2",
     "jest": "^27.0.1",

@@ -47,10 +47,9 @@
 <script>
     let path = new motPluginPath();
     let r = path.parse(`M 20,30 T 400 E linear Z`);
-    const s = path.create3PBezier(
+    const s = path.create2PBezier(
         { x: 0, y: 0 }, 
-        { x: 100, y: 400 }, 
-        { x: 150, y: 400 }, 
+        { x: 150, y: 600 }, 
         { x: 300, y: 0 }
     );
     console.log(r)

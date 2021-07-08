@@ -1,4 +1,5 @@
 import { Point } from '../@types/index.d';
+import { Vector2D } from './Vector2d';
 declare class Path {
     static pluginName: string;
     static installed: boolean;
@@ -13,20 +14,20 @@ declare class Path {
         instruct: string;
         value: string;
     };
-    linear(t: number): number;
-    easeIn(t: any): number;
-    cubicIn(t: any): number;
-    cubicOut(t: any): number;
-    cubicInOut(t: any): number;
-    quadraticBelzierCurve(): void;
-    Bezier2P(p0: number, p1: number, p2: number, t: number): number;
+    quadraticBezierCurve(): void;
+    bezier2P(p0: number, p1: number, p2: number, t: number): number;
     getBezierNowPoint2P(p0: Point, p1: Point, p2: Point, num: number, tick: number): Point;
     create2PBezier(p0: Point, p1: Point, p2: Point, num?: number, tick?: number): any[];
-    Bezier3P(p0: number, p1: number, p2: number, p3: number, t: number): number;
+    bezier3P(p0: number, p1: number, p2: number, p3: number, t: number): number;
     getBezierNowPoint3P(p0: Point, p1: Point, p2: Point, p3: Point, num: number, tick: number): {
         x: number;
         y: number;
     };
     create3PBezier(p0: Point, p1: Point, p2: Point, p3: Point, num?: number, tick?: number): any[];
+    createSmoothLine(points: Point[], ratio: number): void;
+    createSmoothLineControlPoint(p1: Vector2D, pt: Vector2D, p2: Vector2D, ratio?: number): {
+        control1: Vector2D;
+        control2: Vector2D;
+    };
 }
 export default Path;

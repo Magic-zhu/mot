@@ -212,6 +212,7 @@ class AnimationLanguageSupport {
     this.actions.children.push(action);
     return this;
   }
+
 }
 
 export default AnimationLanguageSupport;
