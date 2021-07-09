@@ -24,10 +24,10 @@ declare class Path {
         y: number;
     };
     create3PBezier(p0: Point, p1: Point, p2: Point, p3: Point, num?: number, tick?: number): any[];
-    createSmoothLine(points: Point[], ratio: number): void;
+    createSmoothLine(points: Point[], ratio?: number): any[];
     createSmoothLineControlPoint(p1: Vector2D, pt: Vector2D, p2: Vector2D, ratio?: number): {
-        control1: Vector2D;
-        control2: Vector2D;
+        control1: Point;
+        control2: Point;
     };
 }
 export default Path;

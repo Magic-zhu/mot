@@ -242,7 +242,7 @@ class Path {
    * @param {Point} p3 终止点  { x : number, y : number}
    * @param {number} [num=100]
    * @param {number} [tick=1]
-   * @return {{points: Array, num: number}}
+   * @return {Point []}
    * @memberof Path
    */
   create3PBezier(
@@ -269,12 +269,56 @@ class Path {
    *
    * @param {Point []} points
    * @param {number} ratio
+   * @return {*}
    * @memberof Path
    */
-  createSmoothLine(points: Point[], ratio: number) {
+  createSmoothLine(points: Point[], ratio: number = 0.3) {
     const len = points.length;
-    if (len <= 3) return;
-    for (let i = 0; i < len; i++) {}
+    let resultPoints = [];
+    const controlPoints = [];
+    if (len < 3) return;
+    for (let i = 0; i < len - 2; i++) {
+      const {control1, control2} = this.createSmoothLineControlPoint(
+          new Vector2D(points[i].x, points[i].y),
+          new Vector2D(points[i + 1].x, points[i + 1].y),
+          new Vector2D(points[i + 2].x, points[i + 2].y),
+          ratio,
+      );
+      controlPoints.push(control1);
+      controlPoints.push(control2);
+      let points1;
+      let points2;
+
+      // 首端控制点只用一个
+      if (i === 0) {
+        points1 = this.create2PBezier(points[i], control1, points[i + 1], 50);
+      } else {
+        console.log(controlPoints);
+        points1 = this.create3PBezier(
+            points[i],
+            controlPoints[2 * i - 1],
+            control1,
+            points[i + 1],
+            50,
+        );
+      }
+      // 尾端部分
+      if (i + 2 === len - 1) {
+        points2 = this.create2PBezier(
+            points[i + 1],
+            control2,
+            points[i + 2],
+            50,
+        );
+      }
+
+      if (i + 2 === len - 1) {
+        resultPoints = [...resultPoints, ...points1, ...points2];
+      } else {
+        resultPoints = [...resultPoints, ...points1];
+      }
+    }
+    return resultPoints;
   }
 
   /**
@@ -311,7 +355,15 @@ class Path {
       );
     }
     delta = delta.scale(ratio);
-    return {control1: pt.add(delta), control2: pt.sub(delta)};
+    const control1: Point = {
+      x: vector2dPlus(pt, delta).x,
+      y: vector2dPlus(pt, delta).y,
+    };
+    const control2: Point = {
+      x: vector2dMinus(pt, delta).x,
+      y: vector2dMinus(pt, delta).y,
+    };
+    return {control1, control2};
   }
 }
 
