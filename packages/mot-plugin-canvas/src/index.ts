@@ -1,3 +1,7 @@
+import App from './core/App';
+import Block from './core/Block';
+import Stage from './core/Stage';
+import Sprite from './core/Sprite';
 /**
  *
  *
@@ -25,4 +29,11 @@ if (window['CanvasRender']) {
 
 window['CanvasRender'] = CanvasRender;
 
-export default CanvasRender;
+
+export {
+  CanvasRender,
+  App,
+  Stage,
+  Block,
+  Sprite,
+};
