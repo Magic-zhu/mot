@@ -5,13 +5,6 @@ const tau = 2 * pi;
 const epsilon = 1e-6;
 const tauEpsilon = tau - epsilon;
 
-const instructMap = {
-  M: 1,
-  C: 1,
-  Q: 1,
-  A: 1,
-  T: 1,
-};
 declare let window: any;
 /**
  *
@@ -46,56 +39,6 @@ class Path {
     mot.register('createPath', (instruct: string) => {
       return new Path(instruct);
     });
-  }
-
-  /**
-   *
-   *
-   * @param {string} instruct
-   * @return {*} void
-   * @memberof Path
-   */
-  parse(instruct: string) {
-    const box = instruct
-        .trim()
-        .replace(/\s/g, ' ')
-        .split(' ')
-        .filter((item) => item !== '');
-    const boxLen = box.length;
-    const instructArray = [];
-    let tempBox = {};
-    for (let i = 0; i <= boxLen; i += 2) {
-      if (box[i] === 'Z') {
-        instructArray.push(this.createInstruct(tempBox));
-        tempBox = {};
-        continue;
-      }
-      tempBox[box[i]] = box[i + 1];
-    }
-    return instructArray;
-  }
-
-  /**
-   *
-   *
-   * @param {*} map
-   * @return {*}
-   * @memberof Path
-   */
-  createInstruct(map) {
-    const instruct = {
-      duration: map.T || 400,
-      timeFunction: map.E || 'linear',
-      instruct: '',
-      value: '',
-    };
-    for (const key in map) {
-      if (key !== 'T' && key !== 'E') {
-        instruct.instruct = key;
-        instruct.value = map[key];
-      }
-    }
-    return instruct;
   }
 
   //   linear(t: number) {

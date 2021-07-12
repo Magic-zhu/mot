@@ -31,53 +31,52 @@
 <body>
     <div id='app'></div>
     <canvas id='cv' width='800' height='300'></canvas>
-    <button id='btn'>开始</button>
+    <!-- <button id='btn'>开始</button> -->
 </body>
 <script src='../build/mot-plugin-path-iife.min.js'></script>
 <script src='../../mot/dist/index.iife.js'></script>
 <script src='../../mot-plugin-dom/dist/index.iife.js'></script>
 <script>
     let path = new motPluginPath();
-    let r = path.parse(`M 20,30 T 400 E linear Z`);
-    const input = [
-        { x: 0, y: 0 },
-        { x: 150, y: 150 },
-        { x: 300, y: 0 },
-        { x: 400, y: 150 },
-        { x: 500, y: 0 },
-        { x: 650, y: 150 },
-    ]
-    const s = path.createSmoothLine(input);
+    // const input = [
+    //     { x: 0, y: 0 },
+    //     { x: 150, y: 150 },
+    //     { x: 300, y: 0 },
+    //     { x: 400, y: 150 },
+    //     { x: 500, y: 0 },
+    //     { x: 650, y: 150 },
+    // ]
+    // const s = path.createSmoothLine(input);
     console.log(r)
-    console.log(s)
-    let ctx = document.getElementById('cv').getContext('2d');
-    ctx.strokeStyle = 'blue';
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    for (let i = 0; i < s.length; i++) {
-        ctx.lineTo(s[i].x, s[i].y);
-    }
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    for (let i = 0; i < input.length; i++) {
-        ctx.lineTo(input[i].x, input[i].y);
-    }
-    ctx.strokeStyle = 'red';
-    ctx.stroke();
-    document.getElementById('btn').addEventListener('click', () => {
-        let app = document.getElementById('app');
-        let index = 0;
-        let move = () => {
-            if (index < s.length) {
-                app.style.left = s[index].x - 10 + 'px';
-                app.style.top = s[index].y - 10 + 'px';
-                index++;
-                requestAnimationFrame(move)
-            }
-        }
-        move()
-    })
+    // console.log(s)
+    // let ctx = document.getElementById('cv').getContext('2d');
+    // ctx.strokeStyle = 'blue';
+    // ctx.beginPath();
+    // ctx.moveTo(0, 0);
+    // for (let i = 0; i < s.length; i++) {
+    //     ctx.lineTo(s[i].x, s[i].y);
+    // }
+    // ctx.stroke();
+    // ctx.beginPath();
+    // ctx.moveTo(0, 0);
+    // for (let i = 0; i < input.length; i++) {
+    //     ctx.lineTo(input[i].x, input[i].y);
+    // }
+    // ctx.strokeStyle = 'red';
+    // ctx.stroke();
+    // document.getElementById('btn').addEventListener('click', () => {
+    //     let app = document.getElementById('app');
+    //     let index = 0;
+    //     let move = () => {
+    //         if (index < s.length) {
+    //             app.style.left = s[index].x - 10 + 'px';
+    //             app.style.top = s[index].y - 10 + 'px';
+    //             index++;
+    //             requestAnimationFrame(move)
+    //         }
+    //     }
+    //     move()
+    // })
 
 </script>
 

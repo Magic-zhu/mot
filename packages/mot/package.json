@@ -1,6 +1,6 @@
 {
-  "name": "magic-mot",
-  "version": "0.0.33",
+  "name": "mot.ts",
+  "version": "0.0.1",
   "description": "先占个名字坑位",
   "main": "src/index.ts",
   "scripts": {
