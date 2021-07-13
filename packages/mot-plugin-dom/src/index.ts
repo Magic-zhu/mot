@@ -379,7 +379,7 @@ class DomRender {
    */
   move(params: any) {
     const left = `${Number(params.x) ? params.x + 'px' : params.x}`;
-    const top = `${Number(params.x) ? params.x + 'px' : params.x}`;
+    const top = `${Number(params.y) ? params.y + 'px' : params.y}`;
     const transitionDuration = `${params.duration}ms`;
     const transitionTimingFunction = `${params.timeFunction}`;
     let transitionProperty = `left,top`;
@@ -411,6 +411,7 @@ class DomRender {
         `scale(${params.x},${params.y})`;
     const transitionDuration = `${params.duration}ms`;
     const transitionTimingFunction = `${params.timeFunction}`;
+    const transformOrigin = `${params.transformOrigin}`;
     let transitionProperty = `transform`;
     transform = this.mergeTransForm(this.originTransform, transform);
     transitionProperty = this.mergeTransitionProperty(
@@ -423,6 +424,7 @@ class DomRender {
       transitionDuration,
       transitionTimingFunction,
       transitionProperty,
+      transformOrigin,
     };
   }
 
@@ -440,6 +442,7 @@ class DomRender {
         `rotate(${params.z}deg)`;
     const transitionDuration = `${params.duration}ms`;
     const transitionTimingFunction = `${params.timeFunction}`;
+    const transformOrigin = `${params.transformOrigin}`;
     let transitionProperty = `transform`;
     transform = this.mergeTransForm(this.originTransform, transform);
     transitionProperty = this.mergeTransitionProperty(
@@ -449,6 +452,7 @@ class DomRender {
     this.update(transform, transitionProperty);
     return {
       transform,
+      transformOrigin,
       transitionDuration,
       transitionTimingFunction,
       transitionProperty,

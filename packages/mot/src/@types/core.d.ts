@@ -24,6 +24,7 @@ export interface ScaleOptions {
     z?: number | string;
     duration?: number;
     timeFunction?: string;
+    transformOrigin?:string;
 }
 
 export interface RotateOptions {
@@ -32,6 +33,7 @@ export interface RotateOptions {
     z?: number | string;
     duration?: number;
     timeFunction?: string;
+    transformOrigin?:string;
 }
 
 export interface SkewOptions {

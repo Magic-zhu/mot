@@ -157,6 +157,7 @@
                 parent: this.actions,
                 duration: 400,
                 timeFunction: "linear",
+                transformOrigin: "50% 50%",
             };
         };
         AnimationLanguageSupport.prototype.statusOn = function (statusDescription, description) {
@@ -260,7 +261,10 @@
             var action = this.initAction();
             action.action = "scale";
             if (isObject(options)) {
-                copyOptions(options, action, ["x", "y", "z", "duration", "timeFunction"]);
+                copyOptions(options, action, [
+                    "x", "y", "z",
+                    "duration", "timeFunction", "transformOrigin"
+                ]);
             }
             else {
                 if (isUndef(y)) {
@@ -269,7 +273,7 @@
                 }
                 else {
                     action.x = options;
-                    action.y = options;
+                    action.y = y;
                     action.duration = duration || 400;
                 }
             }
@@ -280,7 +284,10 @@
             var action = this.initAction();
             action.action = "rotate";
             if (isObject(options)) {
-                copyOptions(options, action, ["x", "y", "z", "duration", "timeFunction"]);
+                copyOptions(options, action, [
+                    "x", "y", "z",
+                    "duration", "timeFunction", "transformOrigin"
+                ]);
             }
             else {
                 action.z = options;
@@ -315,6 +322,7 @@
             else {
                 action.key = options;
                 action.value = value;
+                console.log(duration);
                 action.duration = duration || 400;
             }
             this.actions.children.push(action);

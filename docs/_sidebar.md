@@ -8,6 +8,7 @@
         * [旋转](/zh-cn/dom/rotate.md)
         * [放大缩小](/zh-cn/dom/scale.md)
         * [属性变化](/zh-cn/dom/attr.md)
+        * [等待](/zh-cn/dom/wait.md)
         * [持续动画](/zh-cn/dom/statusOn.md)
     * 进阶
         * [路径动画](/zh-cn/dom/path.md)

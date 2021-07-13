@@ -154,6 +154,7 @@ var AnimationLanguageSupport = /** @class */ (function () {
             parent: this.actions,
             duration: 400,
             timeFunction: "linear",
+            transformOrigin: "50% 50%",
         };
     };
     AnimationLanguageSupport.prototype.statusOn = function (statusDescription, description) {
@@ -257,7 +258,10 @@ var AnimationLanguageSupport = /** @class */ (function () {
         var action = this.initAction();
         action.action = "scale";
         if (isObject(options)) {
-            copyOptions(options, action, ["x", "y", "z", "duration", "timeFunction"]);
+            copyOptions(options, action, [
+                "x", "y", "z",
+                "duration", "timeFunction", "transformOrigin"
+            ]);
         }
         else {
             if (isUndef(y)) {
@@ -266,7 +270,7 @@ var AnimationLanguageSupport = /** @class */ (function () {
             }
             else {
                 action.x = options;
-                action.y = options;
+                action.y = y;
                 action.duration = duration || 400;
             }
         }
@@ -277,7 +281,10 @@ var AnimationLanguageSupport = /** @class */ (function () {
         var action = this.initAction();
         action.action = "rotate";
         if (isObject(options)) {
-            copyOptions(options, action, ["x", "y", "z", "duration", "timeFunction"]);
+            copyOptions(options, action, [
+                "x", "y", "z",
+                "duration", "timeFunction", "transformOrigin"
+            ]);
         }
         else {
             action.z = options;
@@ -312,6 +319,7 @@ var AnimationLanguageSupport = /** @class */ (function () {
         else {
             action.key = options;
             action.value = value;
+            console.log(duration);
             action.duration = duration || 400;
         }
         this.actions.children.push(action);

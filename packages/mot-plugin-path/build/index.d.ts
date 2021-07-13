@@ -7,13 +7,6 @@ declare class Path {
     instructArray: any[];
     constructor(instruct?: string);
     static install(mot: any): void;
-    parse(instruct: string): any[];
-    createInstruct(map: any): {
-        duration: any;
-        timeFunction: any;
-        instruct: string;
-        value: string;
-    };
     quadraticBezierCurve(): void;
     bezier2P(p0: number, p1: number, p2: number, t: number): number;
     getBezierNowPoint2P(p0: Point, p1: Point, p2: Point, num: number, tick: number): Point;
