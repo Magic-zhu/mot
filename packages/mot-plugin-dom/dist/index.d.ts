@@ -64,6 +64,7 @@ interface AttributeOptions {
 interface StatusDescription {
     type:string,
     description?:string,
+    transformOrigin:string,
 }
 
 export { Action, ActionTree, AttributeOptions, MoveOptions, RotateOptions, ScaleOptions, StatusDescription, StyleObject, TranslateOptions };

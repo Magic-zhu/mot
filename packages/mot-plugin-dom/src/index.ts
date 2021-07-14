@@ -115,9 +115,10 @@ class DomRender {
   initStyle(taskQueue: Action[]) {
     let ifInitMove = false;
     const moveInit = () => {
-      // TODO 用另一个api更好  待尝试
-      this.target.style.left = this.target.style.left || '0px';
-      this.target.style.top = this.target.style.top || '0px';
+      this.target.style.left =
+        window.getComputedStyle(this.target, null).left || '0px';
+      this.target.style.top =
+        window.getComputedStyle(this.target, null).top || '0px';
     };
     for (let i = 0, l = taskQueue.length; i < l; i++) {
       const item = taskQueue[i];
@@ -149,7 +150,7 @@ class DomRender {
     let index: number = 0;
     const next = (item: StyleObject, time: number = -1) => {
       const done = () => {
-        if (item.status!=='statusOn'&& item.status!=='statusOff') {
+        if (item.status !== 'statusOn' && item.status !== 'statusOff') {
           const {style} = item;
           // eslint-disable-next-line guard-for-in
           for (const attr in style) {
@@ -157,8 +158,8 @@ class DomRender {
           }
         } else {
           const MAP = {
-            'statusOn': this.renderStatusOn.bind(this),
-            'statusOff': this.renderStatusOff.bind(this),
+            statusOn: this.renderStatusOn.bind(this),
+            statusOff: this.renderStatusOff.bind(this),
           };
           MAP[item.status](this.taskQueue[index]);
         }
@@ -170,9 +171,13 @@ class DomRender {
           );
         }
       };
-      // 判断是同步还是异步执行 -1 代表同步
+      // 判断是同步还是异步执行 -1 代表同步 -2 代表走requestAnimationFrame
       if (time === -1) {
         done();
+      } else if (time === -2) {
+        requestAnimationFrame(()=>{
+          done();
+        });
       } else {
         setTimeout(() => {
           done();
@@ -214,8 +219,9 @@ class DomRender {
         endTransform = `rotateZ(360deg)`;
       }
       this.insertKeyFrame(`@keyframes ${name} {
-          from {transform:${startTransform}}
-          to {transform:${endTransform}}
+          from {transform:${startTransform};}
+          to {transform:${endTransform};
+          transform-origin:${item.status.transformOrigin}}}
         }`);
       const className = `mot-class-rotate-${new Date().getTime()}`;
       this.addStylesheetRules([
@@ -224,7 +230,31 @@ class DomRender {
       this.addClassName(this.target, className);
     }
 
-    if (item.status && item.status.type === 'scale') {
+    if (
+      item.status &&
+      item.status.type === 'scale' &&
+      item.status.description !== ''
+    ) {
+      const name = `scale${new Date().getTime()}`;
+      const direction: string = item.status.description.split(',')[0].trim();
+      const startDirectionX = direction.split('|')[0];
+      const startDirectionY = direction.split('|')[1];
+      const endDirectionX = direction.split('|')[2];
+      const endDirectionY = direction.split('|')[3];
+      const params: string = item.status.description.split(',')[1].trim();
+      const startTransform = `scale(${startDirectionX},${startDirectionY})`;
+      const endTransform = `scale(${endDirectionX},${endDirectionY})`;
+      this.insertKeyFrame(`@keyframes ${name} {
+        from {transform:${startTransform};
+        transform-origin:${item.status.transformOrigin}}
+        to {transform:${endTransform};
+        transform-origin:${item.status.transformOrigin}}
+      }`);
+      const className = `mot-class-scale-${new Date().getTime()}`;
+      this.addStylesheetRules([
+        ['.' + className, ['animation', `${name} ${params}`]],
+      ]);
+      this.addClassName(this.target, className);
     }
   }
 
@@ -307,11 +337,18 @@ class DomRender {
         styleArray.push({style: {}, duration: item.duration});
       } else if (item.action == 'wait') {
         styleArray.push({style: {}, duration: item.time});
-      } else if (item.action == 'statusOn'|| item.action == 'statusOff') {
+      } else if (item.action == 'statusOn' || item.action == 'statusOff') {
         styleArray.push({
           style: {},
           duration: item.duration,
           status: item.action,
+        });
+      } else if (item.action === 'path') {
+        item.points.forEach((point) => {
+          styleArray.push({
+            style: {left: `${point.x}px`, top: `${point.y}px`},
+            duration: -2,
+          });
         });
       } else {
         styleArray.push({

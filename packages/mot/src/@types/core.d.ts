@@ -77,3 +77,13 @@ export interface StatusDescription {
     type:string,
     description?:string, 
 }
+
+export interface Point {
+    x:number,
+    y:number,
+}
+
+export interface PathOptions {
+    precision?:number,
+    ratio?:number,
+}

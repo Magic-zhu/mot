@@ -64,4 +64,5 @@ export interface AttributeOptions {
 export interface StatusDescription {
     type:string,
     description?:string,
+    transformOrigin:string,
 }

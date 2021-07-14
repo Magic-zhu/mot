@@ -1,8 +1,7 @@
 ## 位移
 
 示例图片
-
-<html><img src='../../assets/move.gif'><html>
+![](../../assets/move.gif)
 
 ### api 介绍
 

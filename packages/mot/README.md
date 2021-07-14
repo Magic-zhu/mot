@@ -1,1 +1,5 @@
-占个名字坑位
+Animation Solution
+
+docs: https://magic-zhu.github.io/mot/
+
+ESLINT: Google

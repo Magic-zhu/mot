@@ -4,8 +4,7 @@ declare class Path {
     static pluginName: string;
     static installed: boolean;
     static mot: any;
-    instructArray: any[];
-    constructor(instruct?: string);
+    constructor();
     static install(mot: any): void;
     quadraticBezierCurve(): void;
     bezier2P(p0: number, p1: number, p2: number, t: number): number;
@@ -17,7 +16,7 @@ declare class Path {
         y: number;
     };
     create3PBezier(p0: Point, p1: Point, p2: Point, p3: Point, num?: number, tick?: number): any[];
-    createSmoothLine(points: Point[], ratio?: number): any[];
+    createSmoothLine(points: Point[], options: any): any[];
     createSmoothLineControlPoint(p1: Vector2D, pt: Vector2D, p2: Vector2D, ratio?: number): {
         control1: Point;
         control2: Point;

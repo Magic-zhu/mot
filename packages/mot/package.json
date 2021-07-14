@@ -1,8 +1,9 @@
 {
   "name": "mot.ts",
-  "version": "0.0.1",
-  "description": "先占个名字坑位",
+  "version": "0.0.2",
+  "description": "animation solution",
   "main": "src/index.ts",
+  "module": "src/index.ts",
   "scripts": {
     "build": "rollup --config",
     "start": "rollup --config -w",
@@ -16,7 +17,8 @@
     "animation",
     "webgl",
     "canvas",
-    "svg"
+    "svg",
+    "dom"
   ],
   "author": "朱睿家",
   "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "mot-plugin-dom",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "基于dom的动画渲染",
   "main": "src/index.ts",
   "module":"src/index.ts",

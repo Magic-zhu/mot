@@ -1,8 +1,7 @@
 ## 属性变化
 
 示例图片
-
-<html><img src='../../assets/attribute.gif'><html>
+![](../../assets/attribute.gif)
 
 ### api 介绍
 

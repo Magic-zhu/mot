@@ -16,16 +16,12 @@ class Path {
   static installed: boolean = false;
   static mot: any;
 
-  instructArray = [];
-
   /**
    * Creates an instance of Path.
    * @param {string} [instruct]
    * @memberof Path
    */
-  constructor(instruct?: string) {
-    // this.instructArray = this.parse(instruct)
-  }
+  constructor() {}
 
   /**
    *
@@ -36,8 +32,8 @@ class Path {
    */
   static install(mot: any) {
     this.mot = mot;
-    mot.register('createPath', (instruct: string) => {
-      return new Path(instruct);
+    mot.register('createPath', () => {
+      return new Path();
     });
   }
 
@@ -211,11 +207,11 @@ class Path {
    * 平滑曲线生成
    *
    * @param {Point []} points
-   * @param {number} ratio
+   * @param {Object} options
    * @return {*}
    * @memberof Path
    */
-  createSmoothLine(points: Point[], ratio: number = 0.3) {
+  createSmoothLine(points: Point[], options) {
     const len = points.length;
     let resultPoints = [];
     const controlPoints = [];
@@ -225,7 +221,7 @@ class Path {
           new Vector2D(points[i].x, points[i].y),
           new Vector2D(points[i + 1].x, points[i + 1].y),
           new Vector2D(points[i + 2].x, points[i + 2].y),
-          ratio,
+          options.ratio || 0.3,
       );
       controlPoints.push(control1);
       controlPoints.push(control2);
@@ -234,15 +230,19 @@ class Path {
 
       // 首端控制点只用一个
       if (i === 0) {
-        points1 = this.create2PBezier(points[i], control1, points[i + 1], 50);
+        points1 = this.create2PBezier(
+            points[i],
+            control1,
+            points[i + 1],
+            options.precision || 50,
+        );
       } else {
-        console.log(controlPoints);
         points1 = this.create3PBezier(
             points[i],
             controlPoints[2 * i - 1],
             control1,
             points[i + 1],
-            50,
+            options.precision || 50,
         );
       }
       // 尾端部分
@@ -251,7 +251,7 @@ class Path {
             points[i + 1],
             control2,
             points[i + 2],
-            50,
+            options.precision || 50,
         );
       }
 

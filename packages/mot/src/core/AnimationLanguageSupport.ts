@@ -9,9 +9,11 @@ import {
   StepOptions,
   SkewOptions,
   StatusDescription,
-} from "../@types";
-import Motion from "../base";
-import { isUndef, copyOptions, isObject } from "../utils/share";
+  Point,
+  PathOptions,
+} from '../@types';
+import Motion from '../base';
+import { isUndef, copyOptions, isObject } from '../utils/share';
 
 class AnimationLanguageSupport {
   actions: ActionTree;
@@ -25,17 +27,18 @@ class AnimationLanguageSupport {
 
   private initAction(): Action {
     return {
-      type: "single",
+      type: 'single',
       parent: this.actions,
       duration: 400,
-      timeFunction: "linear",
-      transformOrigin: "50% 50%",
+      timeFunction: 'linear',
+      transformOrigin: '50% 50%',
     };
   }
 
   statusOn(
     statusDescription: StatusDescription | string,
-    description?: string
+    description?: string,
+    transformOrigin?: string
   ) {
     let _statusDescription;
     if (isObject(statusDescription)) {
@@ -44,11 +47,12 @@ class AnimationLanguageSupport {
       _statusDescription = {
         type: statusDescription,
         description: description,
+        transformOrigin: transformOrigin || '50% 50%',
       };
     }
     let action: Action = {
-      type: "single",
-      action: "statusOn",
+      type: 'single',
+      action: 'statusOn',
       status: _statusDescription,
       parent: null,
       children: [],
@@ -65,12 +69,12 @@ class AnimationLanguageSupport {
     } else {
       _statusDescription = {
         type: statusDescription,
-        description: "",
+        description: '',
       };
     }
     let action: Action = {
-      type: "single",
-      action: "statusOff",
+      type: 'single',
+      action: 'statusOff',
       status: _statusDescription,
       parent: null,
       children: [],
@@ -83,13 +87,13 @@ class AnimationLanguageSupport {
   step(args: any[], options: StepOptions = {}) {
     if (args.length == 0) return;
     let actions: Action = {
-      type: "group",
+      type: 'group',
       parent: null,
       children: [],
     };
     actions.duration = isUndef(options.duration) ? 400 : options.duration;
     actions.timeFunction = isUndef(options.timeFunction)
-      ? "linear"
+      ? 'linear'
       : options.timeFunction;
     args.forEach((res) => {
       res.parent = actions;
@@ -106,9 +110,9 @@ class AnimationLanguageSupport {
 
   translate(options: TranslateOptions | number, y?: number, duration?: number) {
     let action = this.initAction();
-    action.action = "translate";
+    action.action = 'translate';
     if (isObject(options)) {
-      copyOptions(options, action, ["x", "y", "z", "duration", "timeFunction"]);
+      copyOptions(options, action, ['x', 'y', 'z', 'duration', 'timeFunction']);
     } else {
       action.x = options;
       action.y = y;
@@ -120,9 +124,9 @@ class AnimationLanguageSupport {
 
   moveTo(options: MoveOptions | number, y?: number, duration?: number) {
     let action = this.initAction();
-    action.action = "move";
+    action.action = 'move';
     if (isObject(options)) {
-      copyOptions(options, action, ["x", "y", "duration", "timeFunction"]);
+      copyOptions(options, action, ['x', 'y', 'duration', 'timeFunction']);
     } else {
       action.x = options;
       action.y = y;
@@ -134,11 +138,15 @@ class AnimationLanguageSupport {
 
   scale(options: ScaleOptions | number, y?: number, duration?: number) {
     let action = this.initAction();
-    action.action = "scale";
+    action.action = 'scale';
     if (isObject(options)) {
       copyOptions(options, action, [
-        "x", "y", "z", 
-        "duration", "timeFunction","transformOrigin"
+        'x',
+        'y',
+        'z',
+        'duration',
+        'timeFunction',
+        'transformOrigin',
       ]);
     } else {
       if (isUndef(y)) {
@@ -156,11 +164,15 @@ class AnimationLanguageSupport {
 
   rotate(options: RotateOptions | number, duration?: number) {
     let action = this.initAction();
-    action.action = "rotate";
+    action.action = 'rotate';
     if (isObject(options)) {
       copyOptions(options, action, [
-        "x", "y", "z", 
-        "duration", "timeFunction","transformOrigin"
+        'x',
+        'y',
+        'z',
+        'duration',
+        'timeFunction',
+        'transformOrigin',
       ]);
     } else {
       action.z = options;
@@ -172,9 +184,9 @@ class AnimationLanguageSupport {
 
   skew(options: SkewOptions | number, y?: number, duration?: number) {
     let action = this.initAction();
-    action.action = "skew";
+    action.action = 'skew';
     if (isObject(options)) {
-      copyOptions(options, action, ["x", "y", "z", "duration", "timeFunction"]);
+      copyOptions(options, action, ['x', 'y', 'z', 'duration', 'timeFunction']);
     } else {
       action.x = options;
       action.y = y;
@@ -184,43 +196,48 @@ class AnimationLanguageSupport {
 
   attribute(options: AttributeOptions, value?: string, duration?: number) {
     let action: Action = this.initAction();
-    action.action = "attribute";
+    action.action = 'attribute';
     if (isObject(options)) {
       copyOptions(options, action, [
-        "key",
-        "value",
-        "duration",
-        "timeFunction",
+        'key',
+        'value',
+        'duration',
+        'timeFunction',
       ]);
     } else {
       action.key = options;
       action.value = value;
-      console.log(duration)
+      console.log(duration);
       action.duration = duration || 400;
     }
     this.actions.children.push(action);
     return this;
   }
 
-  path(): Action {
-    if (Motion.plugins["mot-plugin-path"] === undefined) {
+  path(points: Point[], options:PathOptions = {}) {
+    if (Motion.plugins['mot-plugin-path'] === undefined) {
       console.error(`'path()':this function is based on 'path' plugin`);
       return;
     }
     let action = this.initAction();
-    action.action = "path";
-    Motion.createPath();
-    return action;
-  }
-
-  wait(time: number) {
-    let action = this.initAction();
-    action.action = "wait";
-    action.time = time;
+    action.action = 'path';
+    let Path = Motion.createPath();
+    action.points = Path.createSmoothLine(points, {
+      precision: options.precision || 50,
+      ratio: options.ratio || 0.3,
+    });
+    action.options = options || null;
     this.actions.children.push(action);
     return this;
   }
 
+  wait(time: number) {
+    let action = this.initAction();
+    action.action = 'wait';
+    action.time = time;
+    this.actions.children.push(action);
+    return this;
+  }
 }
 
 export default AnimationLanguageSupport;

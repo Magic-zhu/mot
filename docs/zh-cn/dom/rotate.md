@@ -1,8 +1,7 @@
 ## 旋转
 
 示例图片
-
-<html><img src='../../assets/rotate.gif'><html>
+![](../../assets/rotate.gif)
 
 ### api 介绍
 

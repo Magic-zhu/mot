@@ -78,6 +78,16 @@ interface StatusDescription {
     description?:string, 
 }
 
+interface Point {
+    x:number,
+    y:number,
+}
+
+interface PathOptions {
+    precision?:number,
+    ratio?:number,
+}
+
 interface Plugin {
     pluginName: string;
     install: Function;
@@ -88,4 +98,4 @@ interface PluginsMap {
     [key: string]: any;
 }
 
-export { Action, ActionTree, AttributeOptions, EventTarget, MoveOptions, Plugin, PluginsMap, RotateOptions, ScaleOptions, SkewOptions, StatusDescription, StepOptions, TranslateOptions };
+export { Action, ActionTree, AttributeOptions, EventTarget, MoveOptions, PathOptions, Plugin, PluginsMap, Point, RotateOptions, ScaleOptions, SkewOptions, StatusDescription, StepOptions, TranslateOptions };
