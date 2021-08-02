@@ -99,7 +99,7 @@ class Motion extends EventEmitter {
         return this
     }
 
-    static attribute(options: AttributeOptions, value?: string, duration?: number) {
+    static attribute(options: AttributeOptions|string, value?: string, duration?: number) {
         this.checkIfHasDomRender(() => {
             let ani = this.create().attribute(options, value, duration);
             this.dom(this.current, ani).render();

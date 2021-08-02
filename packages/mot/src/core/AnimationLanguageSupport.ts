@@ -194,7 +194,7 @@ class AnimationLanguageSupport {
     }
   }
 
-  attribute(options: AttributeOptions, value?: string, duration?: number) {
+  attribute(options: AttributeOptions|string, value?: string, duration?: number) {
     let action: Action = this.initAction();
     action.action = 'attribute';
     if (isObject(options)) {
