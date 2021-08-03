@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://pkg.poizon.com/duapp/web/npm/animation/mot-plugin-dom.git"
+    "url": ""
   },
   "keywords": [
     "animation",
@@ -21,9 +21,9 @@
   "author": "朱睿家",
   "license": "MIT",
   "bugs": {
-    "url": "https://pkg.poizon.com/duapp/web/npm/animation/mot-plugin-dom.git/issues"
+    "url": ""
   },
-  "homepage": "https://pkg.poizon.com/duapp/web/npm/animation/mot-plugin-dom.git#readme",
+  "homepage": "",
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
