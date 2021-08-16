@@ -1,0 +1,36 @@
+{
+  "name": "mot-plugin-apng",
+  "version": "0.2.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "build": "rollup -c",
+    "start": "rollup -c -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Magic-zhu/mot.git"
+  },
+  "keywords": [
+    "mp4",
+    "canvas"
+  ],
+  "author": "magic-zhu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Magic-zhu/mot/issues"
+  },
+  "devDependencies": {
+    "rollup-plugin-dts": "^2.0.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.29.0",
+    "rollup-plugin-uglify": "^6.0.4",
+    "typescript": "^4.1.3"
+  },
+  "types": "build/index.d.ts",
+  "files": [
+    "src",
+    "build"
+  ],
+  "module": "./src/index.ts"
+}

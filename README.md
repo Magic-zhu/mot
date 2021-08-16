@@ -2,6 +2,9 @@
 
 一整套动画解决方案
 
+💀 默认支持typescript 💀 <br>
+😈 es或者iife都在build里自取 😈 <br>
+
 <html>
     <div><img style='width:100%' src='./docs/assets/mot.png'/></div>
 </html>
