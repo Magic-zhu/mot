@@ -21,3 +21,13 @@ export interface AnimationOptions {
 export interface HookMap {
     [key:string]:any
 }
+
+export interface MVHDInfo {
+  version: number,
+  flags: Uint8Array,
+  createTime: number,
+  modifyTime: number,
+  timeScale: number,
+  duration: number,
+  rate: number,
+}

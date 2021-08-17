@@ -29,7 +29,7 @@ class MP4Render {
       return;
     }
 
-    parser.parseChunks(buffer);
+    parser.splitChunks(buffer);
   }
 }
 
