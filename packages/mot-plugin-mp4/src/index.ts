@@ -28,8 +28,8 @@ class MP4Render {
       console.error('filetype should be mp4');
       return;
     }
-
-    parser.splitChunks(buffer);
+    parser.parseChunks(buffer);
+    console.log(parser);
   }
 }
 

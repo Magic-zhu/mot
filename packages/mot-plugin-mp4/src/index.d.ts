@@ -31,3 +31,13 @@ export interface MVHDInfo {
   duration: number,
   rate: number,
 }
+
+export interface MDHDInfo {
+  version: number,
+  flags: Uint8Array,
+  createTime: number,
+  modifyTime: number,
+  timeScale: number,
+  duration: number,
+  language: Uint8Array,
+}

@@ -1,3 +1,4 @@
+import { MDHDInfo } from './index.d';
 const MP4_SIGNATURE_BYTES = new Uint8Array([
   0x66,
   0x74,
@@ -10,6 +11,9 @@ const MP4_SIGNATURE_BYTES = new Uint8Array([
 ]);
 
 class Parser {
+  mvhd: any = {};
+
+  trak: any = [];
   /**
    * check if mp4
    *
@@ -26,19 +30,10 @@ class Parser {
     return true;
   }
 
-  splitChunks(buffer: Buffer) {
+  parseChunks(buffer: Buffer) {
     let bytes = new Uint8Array(buffer);
     // * skip the fileType box
     let offset = 32;
-    let mvhd: any = {
-      version: 0,
-      flags: [],
-      createTime: '',
-      modifyTime: '',
-      timeScale: '',
-      duration: 0,
-      rate: 1,
-    };
     let i = 0;
     while (offset < bytes.length && i < 20) {
       i++;
@@ -55,69 +50,44 @@ class Parser {
           offset += 8;
           break;
         case 'mvhd':
-          offset += 8;
-          mvhd.version = bytes[offset];
-          offset += 1;
-          mvhd.flags = bytes.slice(offset, offset + 3);
-          offset += 3;
-          mvhd.createTime = this.getSize(bytes, offset);
-          offset += 4;
-          mvhd.modifyTime = this.getSize(bytes, offset);
-          offset += 4;
-          mvhd.timeScale = this.getSize(bytes, offset);
-          offset += 4;
-          mvhd.duration = this.getSize(bytes, offset);
-          offset += 4;
-          mvhd.rate = 'lalala';
-          offset += 4;
-          mvhd.volume = 'lalalal';
-          offset += 12;
-          mvhd.matrix = bytes.slice(offset, offset + 36);
-          offset += 36;
-          offset += 24;
-          mvhd.nextTrackId = this.getSize(bytes, offset);
-          offset += 4;
-          console.log(mvhd);
+          this.mvhdParser(bytes, offset);
+          offset += boxLength;
           break;
         case 'trak':
+          this.trak.push({});
           offset += 8;
           break;
         case 'tkhd':
-          let thkd: any = {};
-          offset += 8;
-          thkd.version = bytes[offset];
-          offset += 1;
-          thkd.flags = bytes.slice(offset, offset + 3);
-          offset += 3;
-          thkd.createTime = this.getSize(bytes, offset);
-          offset += 4;
-          thkd.modifyTime = this.getSize(bytes, offset);
-          offset += 4;
-          thkd.trackId = this.getSize(bytes, offset);
-          offset += 4;
-          // unused
-          offset += 4;
-          thkd.duration = this.getSize(bytes, offset);
-          offset += 4;
-          // unused
-          offset += 8;
-          thkd.layer = 0;
-          console.log(bytes.slice(offset, offset +2))
-          offset += 2;
-          thkd.alternateGroup = 0;
-          offset += 2;
-          thkd.volume = 0;
-          offset += 2;
-          // unused
-          offset += 2;
-          thkd.matrix = bytes.slice(offset, offset + 36);
-          offset += 36;
-          thkd.width = this.get16Int16FLOAT(bytes, offset);
-          offset += 4;
-          thkd.height = this.get16Int16FLOAT(bytes, offset);
-          offset += 4;
-          console.log(thkd)
+          this.tkhdParser(bytes, offset);
+          this.trak[this.trak.length - 1].tkhd = {};
+          offset += boxLength;
           break;
+        case 'mdia':
+          this.trak[this.trak.length - 1].mdia = {};
+          offset += 8;
+          break;
+        case 'mdhd':
+          this.mdhdParser(bytes, offset);
+          offset += boxLength;
+          break;
+        case 'hdlr':
+          offset += boxLength;
+          break;
+        case 'minf':
+          offset += 8;
+          break;
+        case 'smhd':
+          offset += boxLength;
+          break;
+        case 'dinf':
+          offset += boxLength;
+          break;
+        case 'stbl':
+          offset += boxLength;
+          break;
+        //     case '':
+        //       offset += boxLength;
+        //       break;
         default:
           offset += boxLength;
           break;
@@ -125,10 +95,10 @@ class Parser {
     }
   }
 
-  parseChunks(bytes: Buffer, off: number) {}
-
-  getBoxType(bytes: Uint8Array, offset: number) {
-    let chars = Array.prototype.slice.call(bytes.subarray(offset, offset + 4));
+  getBoxType(bytes: Uint8Array, offset: number, length: number = 4) {
+    let chars = Array.prototype.slice.call(
+      bytes.subarray(offset, offset + length)
+    );
     return String.fromCharCode.apply(String, chars);
   }
 
@@ -141,10 +111,11 @@ class Parser {
    * @return {number}
    * @memberof Parser
    */
-  getSize(bytes: Uint8Array, offset: number): number {
+  getSize(bytes: Uint8Array, offset: number, length: number = 4): number {
     let x = 0;
     x += (bytes[0 + offset] << 24) >>> 0;
-    for (let i = 1; i < 4; i++) x += bytes[i + offset] << ((3 - i) * 8);
+    for (let i = 1; i < length; i++)
+      x += bytes[i + offset] << ((length - 1 - i) * 8);
     return x;
   }
 
@@ -153,15 +124,134 @@ class Parser {
    * [16.16]
    * @param {Uint8Array} bytes
    * @param {number} offset
-   * @return {*}  {number}
+   * @return {number}
    * @memberof Parser
    */
-  get16Int16FLOAT(bytes: Uint8Array, offset: number): number{
-    let  x = 0;
-    let  y = 0;
+  get16Int16FLOAT(bytes: Uint8Array, offset: number): number {
+    let x = 0;
+    let y = 0;
     for (let i = 0; i < 2; i++) x += bytes[i + offset] << ((1 - i) * 8);
     for (let i = 2; i < 4; i++) y += bytes[i + offset] << ((3 - i) * 8);
     return Number(`${x}.${y}`);
+  }
+
+  /**
+   *
+   *
+   * @param {Uint8Array} bytes
+   * @param {number} offset
+   * @return {number}
+   * @memberof Parser
+   */
+  get8INT8FLOAT(bytes: Uint8Array, offset: number): number {
+    let x = 0;
+    let y = 0;
+    x += bytes[offset];
+    y += bytes[offset];
+    return Number(`${x}.${y}`);
+  }
+
+  mvhdParser(bytes: Uint8Array, offset: number) {
+    let mvhd: any = {
+      version: 0,
+      flags: [],
+      createTime: '',
+      modifyTime: '',
+      timeScale: '',
+      duration: 0,
+      rate: 1,
+    };
+    offset += 8;
+    mvhd.version = bytes[offset];
+    offset += 1;
+    mvhd.flags = bytes.slice(offset, offset + 3);
+    offset += 3;
+    mvhd.createTime = this.getSize(bytes, offset);
+    offset += 4;
+    mvhd.modifyTime = this.getSize(bytes, offset);
+    offset += 4;
+    mvhd.timeScale = this.getSize(bytes, offset);
+    offset += 4;
+    mvhd.duration = this.getSize(bytes, offset);
+    offset += 4;
+    mvhd.rate = this.get16Int16FLOAT(bytes, offset);
+    offset += 4;
+    mvhd.volume = this.get8INT8FLOAT(bytes, offset);
+    offset += 2;
+    // unused
+    offset += 10;
+    mvhd.matrix = bytes.slice(offset, offset + 36);
+    offset += 36;
+    offset += 24;
+    mvhd.nextTrackId = this.getSize(bytes, offset);
+    offset += 4;
+  }
+
+  tkhdParser(bytes: Uint8Array, offset: number) {
+    let thkd: any = {};
+    offset += 8;
+    thkd.version = bytes[offset];
+    offset += 1;
+    thkd.flags = bytes.slice(offset, offset + 3);
+    offset += 3;
+    thkd.createTime = this.getSize(bytes, offset);
+    offset += 4;
+    thkd.modifyTime = this.getSize(bytes, offset);
+    offset += 4;
+    thkd.trackId = this.getSize(bytes, offset);
+    offset += 4;
+    // unused
+    offset += 4;
+    thkd.duration = this.getSize(bytes, offset);
+    offset += 4;
+    // unused
+    offset += 8;
+    thkd.layer = 0;
+    console.log(bytes.slice(offset, offset + 2));
+    offset += 2;
+    thkd.alternateGroup = 0;
+    offset += 2;
+    thkd.volume = this.get8INT8FLOAT(bytes, offset);
+    offset += 2;
+    // unused
+    offset += 2;
+    thkd.matrix = bytes.slice(offset, offset + 36);
+    offset += 36;
+    thkd.width = this.get16Int16FLOAT(bytes, offset);
+    offset += 4;
+    thkd.height = this.get16Int16FLOAT(bytes, offset);
+    offset += 4;
+    return thkd;
+  }
+
+  mdhdParser(bytes: Uint8Array, offset: number) {
+    let mdhd: MDHDInfo = {
+      version: 0,
+      flags: new Uint8Array(),
+      createTime: 0,
+      modifyTime: 0,
+      timeScale: 0,
+      duration: 0,
+      language: new Uint8Array(),
+    };
+    offset += 8;
+    mdhd.version = bytes[offset];
+    offset += 1;
+    mdhd.flags = bytes.slice(offset, offset + 3);
+    offset += 3;
+    mdhd.createTime = this.getSize(bytes, offset);
+    offset += 4;
+    mdhd.modifyTime = this.getSize(bytes, offset);
+    offset += 4;
+    mdhd.timeScale = this.getSize(bytes, offset);
+    offset += 4;
+    mdhd.duration = this.getSize(bytes, offset);
+    offset += 4;
+    mdhd.language = bytes.slice(offset, offset + 2);
+    offset += 2;
+    // unused
+    offset += 2;
+    return mdhd;
   }
 }
 export default Parser;
