@@ -670,10 +670,4 @@ class DomRender {
   }
 }
 
-if (window['DomRender']) {
-  console.warn(`'DomRender' had been used,and it will be covered`);
-}
-
-window['DomRender'] = DomRender;
-
 export default DomRender;

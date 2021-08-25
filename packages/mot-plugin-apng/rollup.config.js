@@ -7,11 +7,17 @@ export default [{
   output: [
     {
       file: 'build/mot-plugin-apng-iife.min.js',
-      format: 'iife'
+      format: 'iife',
+      name:"APNG",
     },
     {
       file: 'build/mot-plugin-apng-es.min.js',
       format: 'esm'
+    },
+    {
+      file: 'build/mot-plugin-apng-umd.min.js',
+      format: 'umd',
+      name:"mot-plugin-apng",
     }
   ],
   plugins: [

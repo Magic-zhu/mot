@@ -1,25 +1,32 @@
-import typescript from '@rollup/plugin-typescript'
+import typescript from 'rollup-plugin-typescript2'
 import resolve from 'rollup-plugin-node-resolve'
 import dts from "rollup-plugin-dts"
+import { terser } from "rollup-plugin-terser";
 
 export default [
   {
     input: 'src/index.ts',
-    plugins: [resolve(), typescript({ lib: ["es5", "es6", "dom"], target: "es5" })],
+    plugins: [resolve(), typescript(),terser()],
     output: [
       {
-        file: 'dist/index.ems.js',
+        file: 'dist/index-ems.min.js',
         format: 'es',
       },
       {
-        file: 'dist/index.iife.js',
+        file: 'dist/index-iife.min.js',
         format: 'iife',
+        name:'mot'
       },
+      {
+        file: 'dist/index-umd.min.js',
+        format: 'umd',
+        name:'mot'
+      }
     ],
   },
-  {
-    input: 'src/@types/index.ts',
-    output: [{ file: "dist/index.d.ts", format: "es" }],
-    plugins: [dts()],
-  }
+  // {
+  //   input: 'src/@types/index.ts',
+  //   output: [{ file: "dist/index.d.ts", format: "es" }],
+  //   plugins: [dts()],
+  // }
 ]

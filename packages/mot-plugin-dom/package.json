@@ -1,9 +1,10 @@
 {
   "name": "mot-plugin-dom",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "基于dom的动画渲染",
-  "main": "src/index.ts",
-  "module":"src/index.ts",
+  "main": "./dist/index-umd.min.js",
+  "module":"./dist/index-ems.min.js",
+  "types": "./dist/'",
   "scripts": {
     "build": "rollup --config",
     "start": "rollup --config -w"

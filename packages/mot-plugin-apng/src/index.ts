@@ -1,6 +1,6 @@
 
 import parser from "./parser"
-declare let global
+
 class APNG {
 
     static installed = false
@@ -55,7 +55,7 @@ class APNG {
     }
 
     /**
-     * @param buffer 
+     * @param buffer
      * @return {Promise}
      */
     parseBuffer(buffer: Uint8Array): Promise<{}> {
@@ -153,7 +153,7 @@ class APNG {
         //         })
         //         .then((anim) => {
         //             success(anim)
-        //             return 
+        //             return
         //         })
         //         .catch(() => {
         //             return normal()
@@ -186,7 +186,5 @@ class APNG {
         })
     }
 }
-
-window['APNG'] = APNG
 
 export default APNG

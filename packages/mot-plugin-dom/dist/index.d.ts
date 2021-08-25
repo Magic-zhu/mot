@@ -1,70 +1,67 @@
-interface Action {
-    type: string;
-    children?: Action[];
-    action?: string;
-    transformOrigin?: string;
-    parent: Action | ActionTree | null;
-    time?: number;
-    duration?: number;
-    timeFunction?: string;
-    status?:StatusDescription;
+import { Action, StyleObject, AttributeOptions, RotateOptions, ScaleOptions } from './@types';
+declare class DomRender {
+    static pluginName: string;
+    static installed: boolean;
+    static mot: any;
+    target: HTMLElement;
+    Animation: any;
+    taskQueue: any[];
+    originTransform: any[];
+    originTransitionProperty: string[];
+    timeLine: any[];
+    tempQueue: Object[];
+    constructor(dom: HTMLElement, Animation: any);
+    static install(mot: any): void;
+    init(): void;
+    update(transform: string | null, transitionProperty: string | null): void;
+    getOriginStyleTransform(element: HTMLElement): any[];
+    initStyle(taskQueue: Action[]): void;
+    render(): void;
+    renderStatusOn(item: Action): void;
+    renderStatusOff(item: Action): void;
+    mergeTransForm(origin: any[], newStyle: string): string;
+    mergeTransitionProperty(origin: string[], newProperty: string): string;
+    getStyleFromTaskQueue(taskQueue: any[]): StyleObject[];
+    transferAction(item: Action): any;
+    translate(params: any): {
+        transform: string;
+        transitionDuration: string;
+        transitionTimingFunction: string;
+        transitionProperty: string;
+    };
+    move(params: any): {
+        left: string;
+        top: string;
+        transitionDuration: string;
+        transitionTimingFunction: string;
+        transitionProperty: string;
+    };
+    scale(params: ScaleOptions): {
+        transform: string;
+        transitionDuration: string;
+        transitionTimingFunction: string;
+        transitionProperty: string;
+        transformOrigin: string;
+    };
+    rotate(params: RotateOptions): {
+        transform: string;
+        transformOrigin: string;
+        transitionDuration: string;
+        transitionTimingFunction: string;
+        transitionProperty: string;
+    };
+    attribute(params: AttributeOptions): {
+        [x: string]: any;
+        transitionDuration: string;
+        transitionTimingFunction: string;
+        transitionProperty: string;
+    };
+    humpParse(s: string): string;
+    splitStyleToArray(styleString: string): any[];
+    splitTransitionPropertyToArray(property: string): string[];
+    addStylesheetRules(decls: any): void;
+    insertKeyFrame(keyframe: string): void;
+    addClassName(dom: HTMLElement, className: string): void;
+    removeClassName(dom: HTMLElement, className: string): void;
 }
-
-interface ActionTree {
-    parent: ActionTree | null
-    children: Action[] | null
-}
-interface StyleObject {
-    duration: number,
-    style:Object,
-    status?:string
-}
-
-interface TranslateOptions {
-    x?: number | string;
-    y?: number | string;
-    z?: number | string;
-    duration?: number;
-    timeFunction?: string;
-}
-
-interface ScaleOptions {
-    x?: number | string;
-    y?: number | string;
-    z?: number | string;
-    duration?: number;
-    timeFunction?: string;
-    transformOrigin?:string;
-}
-
-interface RotateOptions {
-    angle: number | string;
-    x?: number | string;
-    y?: number | string;
-    z?: number | string;
-    duration?: number;
-    timeFunction?: string;
-    transformOrigin?:string;
-}
-
-interface MoveOptions {
-    x?: number | string;
-    y?: number | string;
-    duration?: number;
-    timeFunction?: string;
-}
-
-interface AttributeOptions {
-    key: string;
-    value: any;
-    duration?: number;
-    timeFunction?: string;
-}
-
-interface StatusDescription {
-    type:string,
-    description?:string,
-    transformOrigin:string,
-}
-
-export { Action, ActionTree, AttributeOptions, MoveOptions, RotateOptions, ScaleOptions, StatusDescription, StyleObject, TranslateOptions };
+export default DomRender;
