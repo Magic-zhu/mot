@@ -7,13 +7,14 @@ declare class Animation {
     playTime: number;
     frames: any[];
     rate: number;
+    isWebGL: boolean;
     nextRenderTime: number;
     fNum: number;
     prevF: any;
     played: boolean;
     finished: boolean;
     contexts: any[];
-    contextsBackup: CanvasRenderingContext2D[];
+    contextsBackup: any[];
     endFrame: number;
     startFrame: number;
     beforeHook: Function | null;
@@ -37,7 +38,7 @@ declare class Animation {
     rewind(): void;
     private setFrameNum;
     setOptions(options: AnimationOptions): void;
-    addContext(ctx: CanvasRenderingContext2D): void;
+    addContext(ctx: CanvasRenderingContext2D | WebGLRenderingContext): void;
     removeContext(ctx: CanvasRenderingContext2D): void;
     private tick;
     private renderFrame;
